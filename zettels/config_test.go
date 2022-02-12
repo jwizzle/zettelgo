@@ -4,18 +4,29 @@ import (
 	"testing"
 )
 
-// Test creation, merging and instantiating from file.
+// Test creation, merging of configuration.
 func TestCfg(t *testing.T) {
-	cfg := Cfg{
-		Directory: tmpdir,
+	cfg_1 := Cfg{
+		Directory: "/path/of/cfg_1",
 		Ignore_list: []string{
 			".git",
 		},
 	}
+	cfg_2 := Cfg{
+		Directory: "/path/of/cfg_2",
+		Ignore_list: []string{
+			".blaat",
+		},
+	}
 
-  for _, filename := range tmpfilenames {
-    if ! util.String_in_slice(tmpdir + "/" + filename, notes) {
-      t.Errorf("test_box: Note not gathered: %v", filename)
-    }
-  }
+	cfg_1.Merge(cfg_2)
+
+	if cfg_1.Directory != "/path/of/cfg_2" {
+		t.Errorf("test_cfg: Dir not correctly updated: %v", cfg_1.Directory)
+	}
+	if len(cfg_1.Ignore_list) != len([]string{
+		".git", ".blaat",
+	}) {
+		t.Errorf("test_cfg: Dir not correctly updated: %v", cfg_1.Directory)
+	}
 }
