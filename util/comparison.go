@@ -1,6 +1,6 @@
-package main
+package util
 
-func string_in_slice(substr string, slice []string) (bool) {
+func String_in_slice(substr string, slice []string) (bool) {
 	for _, item := range slice {
 		if item == substr {
 			return true

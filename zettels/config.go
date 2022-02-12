@@ -1,10 +1,11 @@
-package main
+package zettels
 
 import (
   "fmt"
   "os"
   "gopkg.in/yaml.v3"
 	"io/ioutil"
+	"github.com/jwizzle/zettelgo/util"
 )
 
 type Cfg struct {
@@ -12,20 +13,20 @@ type Cfg struct {
 	Ignore_list []string
 }
 
-func (self *Cfg) merge(other Cfg) {
+func (self *Cfg) Merge(other Cfg) {
 	if other.Directory != "" {
 		self.Directory = other.Directory
 	}
 	if other.Ignore_list != nil {
 		for _, ignore_item := range other.Ignore_list {
-			if ! string_in_slice(ignore_item, self.Ignore_list) {
+			if ! util.String_in_slice(ignore_item, self.Ignore_list) {
 				self.Ignore_list = append(self.Ignore_list, ignore_item)
 			}
 		}
 	}
 }
 
-func cfg_from_file(path string) (*Cfg, error) {
+func Cfg_from_file(path string) (*Cfg, error) {
 	data := Cfg{}
 
 	yfile, yml_err := ioutil.ReadFile(path)
@@ -33,7 +34,7 @@ func cfg_from_file(path string) (*Cfg, error) {
     switch yml_err.(type) {
 			case *os.PathError :
 				text := fmt.Sprintf("No config file at: %v. Continuing with default dir.",
-														CFG_FILE)
+														path)
 				fmt.Println(text)
 			default:
 				return nil, yml_err

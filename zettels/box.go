@@ -1,4 +1,4 @@
-package main
+package zettels
 
 import (
   "os"
@@ -11,7 +11,7 @@ type Box struct {
 	Config Cfg
 }
 
-func (self *Box) gather_paths() ([]string, error) {
+func (self *Box) Gather_paths() ([]string, error) {
   err := filepath.Walk(self.Config.Directory,
 		func(path string, info os.FileInfo, err error) error {
 			if ! path_in_ignorelist(path, self.Config.Ignore_list) {

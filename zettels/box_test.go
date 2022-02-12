@@ -1,7 +1,8 @@
-package main
+package zettels
 
 import (
-	"testing"
+  "testing"
+  "github.com/jwizzle/zettelgo/util"
 )
 
 func TestBox(t *testing.T) {
@@ -13,13 +14,13 @@ func TestBox(t *testing.T) {
 		},
 	}
 	box := Box{Config: cfg}
-	notes, err := box.gather_paths()
+	notes, err := box.Gather_paths()
   if err != nil {
     panic(err)
   }
 
   for _, filename := range tmpfilenames {
-    if ! string_in_slice(tmpdir + "/" + filename, notes) {
+    if ! util.String_in_slice(tmpdir + "/" + filename, notes) {
       t.Errorf("test_box: Note not gathered: %v", filename)
     }
   }

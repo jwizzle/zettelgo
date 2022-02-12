@@ -1,4 +1,4 @@
-module example.com/zettelgo
+module github.com/jwizzle/zettelgo
 
 go 1.13
 
