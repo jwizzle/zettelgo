@@ -1,3 +1,4 @@
+// TODO Finish
 package zettels
 
 type Note struct {

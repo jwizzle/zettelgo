@@ -5,6 +5,8 @@ import (
 	"os"
 )
 
+// Create a temporary directory with some zettels.
+// Return both the path as string and the list of present files.
 func CreateTmpdir(t *testing.T) (string, []string) {
 	tmpdir := t.TempDir()
 	filenames := []string{"henk.md", "bliep.md", "bloep.md", "blaat.md"}

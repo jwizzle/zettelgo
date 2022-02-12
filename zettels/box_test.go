@@ -5,6 +5,7 @@ import (
   "github.com/jwizzle/zettelgo/util"
 )
 
+// Test creation of a box and gathering notes.
 func TestBox(t *testing.T) {
   tmpdir, tmpfilenames := CreateTmpdir(t)
 	cfg := Cfg{
@@ -26,6 +27,7 @@ func TestBox(t *testing.T) {
   }
 }
 
+// Test detection of the ignore list from the config.
 func TestPathInIgnorelist(t *testing.T) {
   scenarios := []struct {
     path string

@@ -1,3 +1,6 @@
+// Zettelgo is a commandline application to interface with a folder of 'zettelkast' notes.
+// This main module implements the 'zettels' package to do all heavy lifting.
+// Its main purpose is to handle configuration and parse CLI opts/params.
 package main
 
 import (
@@ -8,6 +11,8 @@ import (
 
 var HOME, CFG_FILE string
 
+// Instantiate a new config, by combining the defaults that are hardcoded
+// and those read from '~/.zettelgo_conf.yaml' and CLI opts.
 func config_init(defaults *zettels.Cfg) (*zettels.Cfg) {
 	user_cfg, err := zettels.Cfg_from_file(CFG_FILE)
 	if err != nil {
@@ -19,6 +24,7 @@ func config_init(defaults *zettels.Cfg) (*zettels.Cfg) {
 	return defaults
 }
 
+// Main entry point.
 func main() {
 	HOME = os.Getenv("HOME")
 	CFG_FILE = HOME + "/.zettelgo_conf.yaml"

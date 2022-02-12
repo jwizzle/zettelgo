@@ -8,11 +8,14 @@ import (
 	"github.com/jwizzle/zettelgo/util"
 )
 
+// Represent configuration needed to find zettels on system, and parse them correctly.
 type Cfg struct {
 	Directory string
 	Ignore_list []string
 }
 
+// Merge one config with the given other.
+// Overriding self with existing keys in the other config.
 func (self *Cfg) Merge(other Cfg) {
 	if other.Directory != "" {
 		self.Directory = other.Directory
@@ -26,6 +29,7 @@ func (self *Cfg) Merge(other Cfg) {
 	}
 }
 
+// Load config from a yaml file. Returns an instantiated configuration.
 func Cfg_from_file(path string) (*Cfg, error) {
 	data := Cfg{}
 
