@@ -1,8 +1,29 @@
 package main
 
 import (
-  "testing"
+	"testing"
 )
+
+func TestBox(t *testing.T) {
+  tmpdir, tmpfilenames := CreateTmpdir(t)
+	cfg := Cfg{
+		Directory: tmpdir,
+		Ignore_list: []string{
+			".git",
+		},
+	}
+	box := Box{Config: cfg}
+	notes, err := box.gather_paths()
+  if err != nil {
+    panic(err)
+  }
+
+  for _, filename := range tmpfilenames {
+    if ! string_in_slice(tmpdir + "/" + filename, notes) {
+      t.Errorf("test_box: Note not gathered: %v", filename)
+    }
+  }
+}
 
 func TestPathInIgnorelist(t *testing.T) {
   scenarios := []struct {
