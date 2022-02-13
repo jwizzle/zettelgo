@@ -15,7 +15,7 @@ func TestBox(t *testing.T) {
 		},
 	}
 	box := Box{Config: cfg}
-	notes, err := box.Gather_paths()
+	notes, err := box.gather_paths()
   if err != nil {
     panic(err)
   }

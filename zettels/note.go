@@ -10,17 +10,12 @@ type Note struct {
 	Title string
 	Path string
 	Link string
-	Header string
+	Header Header
 }
 
 // Return the header string from a filepath. Without delimiters.
-// When returning an error, the returned string is the filepath.
-// TODO
-// - Create header struct or something
-// - implement
-// - test
-func header_from_filepath(path string, delimiter string) (string, error) {
-	var header string
+func headertext_from_filepath(path string, delimiter string) ([]string, error) {
+	var header []string
 	headeropened := false
 	file, err := os.Open(path)
 	handle_error(err)
@@ -30,7 +25,7 @@ func header_from_filepath(path string, delimiter string) (string, error) {
 	for scanner.Scan() {
 		if ! headeropened {
 			if scanner.Text() != delimiter {
-				return path, &HeaderMalformedError{path: path}
+				return nil, &HeaderMalformedError{path: path}
 			} else {
 				headeropened = true
 			}
@@ -38,22 +33,25 @@ func header_from_filepath(path string, delimiter string) (string, error) {
 			if scanner.Text() == delimiter {
 				return header, nil
 			} else {
-				header = header + scanner.Text()
+				header = append(header, scanner.Text())
 			}
 		}
 	}
 
-	return path, &HeaderMalformedError{path: path}
+	return nil, &HeaderMalformedError{path: path}
 }
 
 // Read a zettel and return a parsed Note object.
 func Note_from_filepath(path string, config Cfg) (Note, error) {
-	header, err := header_from_filepath(path, config.Header_delimiter)
+	headertext, err := headertext_from_filepath(path, config.Header_delimiter)
 	handle_error(err)
+	newheader := Header{Text: headertext}
+	newheader.parse()
 
+	// TODO
 	return Note{
 		Title: "Henk",
-		Header: header,
+		Header: newheader,
 		Path: path,
 	}, nil
 }
