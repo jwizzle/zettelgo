@@ -9,20 +9,17 @@ import (
 type Note struct {
 	Title string
 	Path string
-	Date string
 	Link string
-	sections []string
-	Tags []string
-	Links []string
 	Header string
 }
 
 // Return the header string from a filepath. Without delimiters.
 // When returning an error, the returned string is the filepath.
 // TODO
+// - Create header struct or something
 // - implement
 // - test
-func header_from_filepath(path string) (string, error) {
+func header_from_filepath(path string, delimiter string) (string, error) {
 	var header string
 	headeropened := false
 	file, err := os.Open(path)
@@ -32,14 +29,13 @@ func header_from_filepath(path string) (string, error) {
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
 		if ! headeropened {
-			// TODO Make header delimiter configurable
-			if scanner.Text() != "---" {
+			if scanner.Text() != delimiter {
 				return path, &HeaderMalformedError{path: path}
 			} else {
 				headeropened = true
 			}
 		} else {
-			if scanner.Text() == "---" {
+			if scanner.Text() == delimiter {
 				return header, nil
 			} else {
 				header = header + scanner.Text()
@@ -47,19 +43,17 @@ func header_from_filepath(path string) (string, error) {
 		}
 	}
 
-	// TODO Handle better
 	return path, &HeaderMalformedError{path: path}
 }
 
 // Read a zettel and return a parsed Note object.
-// TODO Fill the rest of the elements
-// Possibly seperate section struct, maybe look at inline struct definition for that.
-func Note_from_filepath(path string) (Note, error) {
-	header, err := header_from_filepath(path)
+func Note_from_filepath(path string, config Cfg) (Note, error) {
+	header, err := header_from_filepath(path, config.Header_delimiter)
 	handle_error(err)
 
 	return Note{
 		Title: "Henk",
 		Header: header,
+		Path: path,
 	}, nil
 }

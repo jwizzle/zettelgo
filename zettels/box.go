@@ -17,11 +17,11 @@ type Box struct {
 // Fill up the box with notes gathered from disk.
 // Returns a reference to the filled box.
 func (self *Box) Fill() (*Box, error) {
-	paths, err := self.Gather_paths()
+	paths, err := self.gather_paths()
 	handle_error(err)
 
 	for _, path := range paths {
-		newnote, err := Note_from_filepath(path)
+		newnote, err := Note_from_filepath(path, self.Config)
 		handle_error(err)
 		self.Notes = append(self.Notes, newnote)
 	}
@@ -30,7 +30,7 @@ func (self *Box) Fill() (*Box, error) {
 }
 
 // Gather all paths of notes, using the config of the box for the root dir.
-func (self *Box) Gather_paths() ([]string, error) {
+func (self *Box) gather_paths() ([]string, error) {
   err := filepath.Walk(self.Config.Directory,
 		func(path string, info os.FileInfo, err error) error {
 			if info.IsDir() {

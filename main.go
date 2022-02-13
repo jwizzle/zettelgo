@@ -34,6 +34,7 @@ func main() {
 		Ignore_list: []string{
 			".git",
 		},
+		Header_delimiter: "---",
 	})
 
 	box := zettels.Box{Config: cfg}
@@ -42,7 +43,7 @@ func main() {
     panic(err)
   }
 
-  //for _, file := range box.Notes {
-  //  fmt.Println(file)
-  //}
+  for _, note := range box.Notes {
+    fmt.Println(note.Path)
+  }
 }

@@ -12,6 +12,7 @@ import (
 type Cfg struct {
 	Directory string
 	Ignore_list []string
+	Header_delimiter string
 }
 
 // Merge one config with the given other.
@@ -19,6 +20,9 @@ type Cfg struct {
 func (self *Cfg) Merge(other Cfg) {
 	if other.Directory != "" {
 		self.Directory = other.Directory
+	}
+	if other.Header_delimiter != "" {
+		self.Header_delimiter = other.Header_delimiter
 	}
 	if other.Ignore_list != nil {
 		for _, ignore_item := range other.Ignore_list {
