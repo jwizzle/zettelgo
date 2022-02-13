@@ -37,12 +37,12 @@ func main() {
 	})
 
 	box := zettels.Box{Config: cfg}
-	_, err := box.Gather_paths()
+	_, err := box.Fill()
   if err != nil {
     panic(err)
   }
 
-  for _, file := range box.Notes {
-    fmt.Println(file)
-  }
+  //for _, file := range box.Notes {
+  //  fmt.Println(file)
+  //}
 }
