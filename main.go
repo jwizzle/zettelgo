@@ -43,7 +43,7 @@ func main() {
     panic(err)
   }
 
-  //for _, note := range box.Notes {
-  //  fmt.Println(note.Path)
-  //}
+  for _, note := range box.Notes {
+    fmt.Println(note.Title)
+  }
 }

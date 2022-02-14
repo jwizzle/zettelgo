@@ -6,6 +6,7 @@ import (
 	"os"
 )
 
+// Represent a note/zettel.
 type Note struct {
 	Title string
 	Path string
@@ -46,11 +47,12 @@ func Note_from_filepath(path string, config Cfg) (Note, error) {
 	headertext, err := headertext_from_filepath(path, config.Header_delimiter)
 	handle_error(err)
 	newheader := Header{Text: headertext}
-	newheader.parse()
+	_, parse_err := newheader.parse()
+	handle_error(parse_err)
 
 	// TODO
 	return Note{
-		Title: "Henk",
+		Title: newheader.Sections["title"].Contentlist[0],
 		Header: newheader,
 		Path: path,
 	}, nil
