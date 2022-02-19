@@ -1,6 +1,7 @@
 package zettels
 
 import (
+	"fmt"
 	"regexp"
 )
 
@@ -21,14 +22,10 @@ type Listsection struct {
 	Content []string
 }
 
-// Parse a stringsection, setting the content correctly.
-func (self *Stringsection) parse() (Stringsection) {
-	prefix_regexp := regexp.MustCompile(self.Title + ` ?[:\-\/\\\_=] ?`)
-	prefix_str := string(prefix_regexp.Find([]byte(self.Content)))
-	prefix_len := len(prefix_str)
-	self.Content = self.Content[prefix_len:]
-
-	return *self
+// Represent a section with Links.
+type Linksection struct {
+	Title string
+	Content []string
 }
 
 // Parse a generic section to a specific one.
@@ -47,6 +44,27 @@ func (genericsection Section) parse() (interface{}) {
 			Content: genericsection.Contentlist,
 		}
 		// TODO .parse maken en hier implementeren.
+		listsection = listsection.parse()
 		return listsection
 	}
+}
+
+// Parse a stringsection, setting the content correctly.
+func (self *Stringsection) parse() (Stringsection) {
+	prefix_regexp := regexp.MustCompile(self.Title + ` ?[:\-\/\\\_=] ?`)
+	prefix_str := string(prefix_regexp.Find([]byte(self.Content)))
+	prefix_len := len(prefix_str)
+	self.Content = self.Content[prefix_len:]
+
+	return *self
+}
+
+// Parse a listsection into a tag or linksection.
+// TODO Finish, figure out what to do with links and tags.
+// Links now don't show up for some reason.
+func (self *Listsection) parse() (Listsection) {
+	for _, i := range self.Content {
+		fmt.Println(i)
+	}
+	return *self
 }
