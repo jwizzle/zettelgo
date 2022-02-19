@@ -1,4 +1,3 @@
-// TODO Finish
 package zettels
 
 import (
@@ -8,11 +7,11 @@ import (
 // Represent the header of a note.
 type Header struct {
 	Text []string
-	Sections map[string]Section
+	Sections map[string]interface{}
 }
 
 // Parse the header content into a list of generic sections.
-// TODO Something with missing titles.
+// TODO Something with missing title sections.
 func parse_genericsections(headertext []string) ([]Section) {
 	var sections []Section
 	var sectiontext []string
@@ -49,12 +48,22 @@ func parse_genericsections(headertext []string) ([]Section) {
 // Parse a header text into a header object.
 func (self *Header) parse() (*Header, error) {
 	if self.Sections == nil {
-		self.Sections = make(map[string]Section)
+		self.Sections = make(map[string]interface{})
 	}
-
 	genericsections := parse_genericsections(self.Text)
+
 	for _, section := range genericsections {
-		self.Sections[section.Title] = unpack_genericsection(section)
+		parsedsection := section.parse()
+
+		switch parsedsection.(type) {
+			case Stringsection:
+				self.Sections[section.Title] = section.parse().(Stringsection)
+			case Listsection:
+				self.Sections[section.Title] = section.parse().(Listsection)
+			default:
+				// TODO Handle this better
+				panic("Unknown section type.")
+    }
 	}
 
 	return self, nil

@@ -1,6 +1,7 @@
 package zettels
 
 import (
+	"regexp"
 )
 
 // Represent a generic section.
@@ -11,16 +12,41 @@ type Section struct {
 
 // Represent a section with string content.
 type Stringsection struct {
-	Section
-	content string
+	Title string
+	Content string
 }
 // Represent a section with list content.
 type Listsection struct {
-	Section
-	content []string
+	Title string
+	Content []string
 }
 
-// TODO
-func unpack_genericsection(packedsection Section) (Section) {
-	return packedsection
+// Parse a stringsection, setting the content correctly.
+func (self *Stringsection) parse() (Stringsection) {
+	prefix_regexp := regexp.MustCompile(self.Title + ` ?[:\-\/\\\_=] ?`)
+	prefix_str := string(prefix_regexp.Find([]byte(self.Content)))
+	prefix_len := len(prefix_str)
+	self.Content = self.Content[prefix_len:]
+
+	return *self
+}
+
+// Parse a generic section to a specific one.
+// Mostly makes sure the content is of the right type.
+// TODO Sub-todos, error laten returnen, en subparsers dat laten doen.
+func (genericsection Section) parse() (interface{}) {
+	if len(genericsection.Contentlist) == 1 {
+		stringsection := Stringsection{
+			Title: genericsection.Title,
+			Content: genericsection.Contentlist[0],
+		}
+		return stringsection.parse()
+	} else {
+		listsection := Listsection{
+			Title: genericsection.Title,
+			Content: genericsection.Contentlist,
+		}
+		// TODO .parse maken en hier implementeren.
+		return listsection
+	}
 }

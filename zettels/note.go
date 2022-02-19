@@ -50,9 +50,8 @@ func Note_from_filepath(path string, config Cfg) (Note, error) {
 	_, parse_err := newheader.parse()
 	handle_error(parse_err)
 
-	// TODO
 	return Note{
-		Title: newheader.Sections["title"].Contentlist[0],
+		Title: newheader.Sections["title"].(Stringsection).Content,
 		Header: newheader,
 		Path: path,
 	}, nil
