@@ -67,7 +67,7 @@ func Note_from_filepath(path string, config Cfg) (Note, error) {
 	headertext, err := headertext_from_filepath(path, config.Header_delimiter)
 	handle_error(err)
 	headertext = wrap_links(headertext)
-	newheader, err := NewHeader(headertext)
+	newheader, err := NewHeader(headertext, path)
 	handle_error(err)
 
 	return Note{

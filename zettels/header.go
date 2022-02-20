@@ -11,15 +11,13 @@ type Header struct {
 	Links map[string]string `yaml:"links"`
 }
 
-// Unmarshal header text to an object.
-// TODO Figure out way to make sure any header parse failures
-// Result in a warning.
-func NewHeader(text []byte) (*Header, error) {
+// Unmarshal header bytestring to an object.
+func NewHeader(text []byte, path string) (*Header, error) {
 	data := Header{}
 
 	unmarshal_err := yaml.Unmarshal(text, &data)
 	if unmarshal_err != nil {
-		return nil, unmarshal_err
+		return nil, &HeaderMalformedError{path: path}
 	}
 	return &data, nil
 }
