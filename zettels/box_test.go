@@ -7,7 +7,7 @@ import (
 
 // Test creation of a box and gathering notes.
 func TestBox(t *testing.T) {
-  tmpdir, tmpfilenames := CreateTmpdir(t)
+  tmpdir, tmpfiles := CreateTmpdir(t)
 	cfg := Cfg{
 		Directory: tmpdir,
 		Ignore_list: []string{
@@ -20,9 +20,9 @@ func TestBox(t *testing.T) {
     panic(err)
   }
 
-  for _, filename := range tmpfilenames {
-    if ! util.String_in_slice(tmpdir + "/" + filename, notes) {
-      t.Errorf("test_box: Note not gathered: %v", filename)
+  for _, tmpfile := range tmpfiles {
+    if ! util.String_in_slice(tmpfile.path, notes) {
+      t.Errorf("test_box: Note not gathered: %v", tmpfile.filename)
     }
   }
 }
