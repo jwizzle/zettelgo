@@ -44,7 +44,7 @@ func TestLinkwrapping(t *testing.T) {
   }
 
   for _, scenario := range scenarios {
-    result := wrap_links(scenario.bytein)
+    result := wrap_specialstrings(scenario.bytein)
 
 		if string(result) != string(scenario.expect) {
 			t.Errorf(

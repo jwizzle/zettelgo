@@ -17,7 +17,7 @@ func TestNewheader(t *testing.T) {
 	for _, tmpfile := range tmpfiles {
 		headertext, err := headertext_from_filepath(tmpfile.path, cfg.Header_delimiter)
 		handle_error(err)
-		headertext = wrap_links(headertext)
+		headertext = wrap_specialstrings(headertext)
 		newheader, err := NewHeader(headertext, tmpfile.path)
 		handle_error(err)
 

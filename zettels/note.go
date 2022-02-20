@@ -48,16 +48,28 @@ func headertext_from_filepath(path string, delimiter string) ([]byte, error) {
 	return nil, &HeaderMalformedError{path: path}
 }
 
-// Wrap all links in the header text with '' if they aren't already.
+// Wrap all occurences of an unquoted text in quotes.
+func wrap_in_text(text []byte, unquoted_text []byte) ([]byte) {
+	quoted := []byte("\"" + string(unquoted_text) + "\"")
+	if ! bytes.Contains(text, quoted){
+		text = bytes.ReplaceAll(text, unquoted_text, quoted)
+	}
+	return text
+}
+
+// Wrap all links and tags in the header text with '' if they aren't already.
 // Needed for yaml validation. Since [[]] are invalig in unwrapped strings.
-func wrap_links(text []byte) ([]byte) {
+func wrap_specialstrings(text []byte) ([]byte) {
 	link_regexp := regexp.MustCompile(`\[\[[\w\._ ]+\]\]`)
+	tag_regexp := regexp.MustCompile(`#\w+`)
 	unquoted_links := link_regexp.FindAll(text, -1)
+	unquoted_tags := tag_regexp.FindAll(text, -1)
+
 	for _, unq_link := range unquoted_links {
-		quoted_link := []byte("\"" + string(unq_link) + "\"")
-		if ! bytes.Contains(text, quoted_link){
-			text = bytes.ReplaceAll(text, unq_link, quoted_link)
-		}
+		text = wrap_in_text(text, unq_link)
+	}
+	for _, unq_tag := range unquoted_tags {
+		text = wrap_in_text(text, unq_tag)
 	}
 
 	return text
@@ -67,7 +79,7 @@ func wrap_links(text []byte) ([]byte) {
 func Note_from_filepath(path string, config Cfg) (Note, error) {
 	headertext, err := headertext_from_filepath(path, config.Header_delimiter)
 	handle_error(err)
-	headertext = wrap_links(headertext)
+	headertext = wrap_specialstrings(headertext)
 	newheader, err := NewHeader(headertext, path)
 	handle_error(err)
 
