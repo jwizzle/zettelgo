@@ -25,6 +25,12 @@ func TestBox(t *testing.T) {
       t.Errorf("test_box: Note not gathered: %v", tmpfile.filename)
     }
   }
+
+  // Test if filling at least doesn't return an error.
+  _, err = box.Fill()
+  if err != nil {
+    t.Errorf("test_box: Filling returned an error: %v", err)
+  }
 }
 
 // Test detection of the ignore list from the config.
