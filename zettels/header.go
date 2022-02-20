@@ -1,70 +1,26 @@
 package zettels
 
 import (
-	"regexp"
+  "gopkg.in/yaml.v3"
 )
-
 // Represent the header of a note.
 type Header struct {
-	Text []string
-	Sections map[string]interface{}
+	Title string `yaml:"title"`
+	Date string `yaml:"date"`
+	Tags []string `yaml:"tags"`
+	Links map[string]string `yaml:"links"`
 }
 
-// Parse the header content into a list of generic sections.
-// TODO Something with missing title sections.
-func parse_genericsections(headertext []string) ([]Section) {
-	var sections []Section
-	var sectiontext []string
-	sectionstarted := false
+// Unmarshal header text to an object.
+// TODO Figure out way to make sure any header parse failures
+// Result in a warning.
+// Make in the form header.from_text
+func Header_from_text(text []byte) (*Header, error) {
+	data := Header{}
 
-	for _, line := range headertext {
-		firstchar := line[0:1]
-
-		if ! sectionstarted {
-			if regexp.MustCompile(`^[a-zA-Z]$`).MatchString(firstchar) {
-				sectionstarted = true
-				sectiontext = []string{line}
-			}
-		} else {
-			if regexp.MustCompile(`^[a-zA-Z]$`).MatchString(firstchar) {
-				firstline := sectiontext[0]
-				sectiontitle_regex := regexp.MustCompile(`([a-zA-Z]+)`)
-				newsectiontitle := sectiontitle_regex.Find([]byte(firstline))
-				newsection := Section{
-					Title: string(newsectiontitle),
-					Contentlist: sectiontext,
-				}
-				sections = append(sections, newsection)
-				sectiontext = []string{line}
-			} else {
-				sectiontext = append(sectiontext, line)
-			}
-		}
+	unmarshal_err := yaml.Unmarshal(text, &data)
+	if unmarshal_err != nil {
+		return nil, unmarshal_err
 	}
-
-	return sections
-}
-
-// Parse a header text into a header object.
-func (self *Header) parse() (*Header, error) {
-	if self.Sections == nil {
-		self.Sections = make(map[string]interface{})
-	}
-	genericsections := parse_genericsections(self.Text)
-
-	for _, section := range genericsections {
-		parsedsection := section.parse()
-
-		switch parsedsection.(type) {
-			case Stringsection:
-				self.Sections[section.Title] = section.parse().(Stringsection)
-			case Listsection:
-				self.Sections[section.Title] = section.parse().(Listsection)
-			default:
-				// TODO Handle this better
-				panic("Unknown section type.")
-    }
-	}
-
-	return self, nil
+	return &data, nil
 }

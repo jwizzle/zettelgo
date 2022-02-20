@@ -9,10 +9,11 @@ import (
 )
 
 // Represent configuration needed to find zettels on system, and parse them correctly.
+// TODO Make yaml keys lowercase
 type Cfg struct {
-	Directory string
-	Ignore_list []string
-	Header_delimiter string
+	Directory string `yaml:"directory"`
+	Ignore_list []string `yaml:"ignore_list"`
+	Header_delimiter string `yaml:"header_delimiter"`
 }
 
 // Merge one config with the given other.
