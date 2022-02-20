@@ -35,5 +35,22 @@ func TestNotefromfile(t *testing.T) {
 
 // Test wrapping of links.
 func TestLinkwrapping(t *testing.T) {
+  scenarios := []struct {
+    bytein []byte
+    expect []byte
+  }{
+    {[]byte("blaatert [[henk]] ding"), []byte(`blaatert "[[henk]]" ding`)},
+    {[]byte(`blaatert "[[henk]]" ding`), []byte(`blaatert "[[henk]]" ding`)},
+  }
 
+  for _, scenario := range scenarios {
+    result := wrap_links(scenario.bytein)
+
+		if string(result) != string(scenario.expect) {
+			t.Errorf(
+        "test_linkwrapping: bytein: %v, expect: %v, got %v.",
+        string(scenario.bytein), string(scenario.expect), string(result),
+      )
+		}
+	}
 }

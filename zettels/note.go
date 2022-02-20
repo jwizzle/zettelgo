@@ -50,13 +50,14 @@ func headertext_from_filepath(path string, delimiter string) ([]byte, error) {
 
 // Wrap all links in the header text with '' if they aren't already.
 // Needed for yaml validation. Since [[]] are invalig in unwrapped strings.
-// TODO Make sure already quoted links are ignored.
 func wrap_links(text []byte) ([]byte) {
 	link_regexp := regexp.MustCompile(`\[\[[\w\._ ]+\]\]`)
 	unquoted_links := link_regexp.FindAll(text, -1)
 	for _, unq_link := range unquoted_links {
 		quoted_link := []byte("\"" + string(unq_link) + "\"")
-		text = bytes.ReplaceAll(text, unq_link, quoted_link)
+		if ! bytes.Contains(text, quoted_link){
+			text = bytes.ReplaceAll(text, unq_link, quoted_link)
+		}
 	}
 
 	return text
