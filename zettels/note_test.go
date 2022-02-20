@@ -33,14 +33,36 @@ func TestNotefromfile(t *testing.T) {
 	}
 }
 
+func TestHeadertextfrompath(t *testing.T) {
+	tmpdir, tmpfiles := CreateTmpdir(t)
+	cfg := Cfg{
+		Directory: tmpdir,
+		Ignore_list: []string{
+			".git",
+		},
+	}
+
+	for _, tmpfile := range tmpfiles {
+		_, err := headertext_from_filepath(tmpfile.path, cfg.Header_delimiter)
+		if err != nil {
+			t.Errorf(
+        "test_headertext_from_path: non-nil error filename: %v, err: %v, content %v.",
+        tmpfile.filename, err, tmpfile.content,
+      )
+		}
+	}
+}
+
 // Test wrapping of links.
-func TestLinkwrapping(t *testing.T) {
+func TestSpecialwrapping(t *testing.T) {
   scenarios := []struct {
     bytein []byte
     expect []byte
   }{
     {[]byte("blaatert [[henk]] ding"), []byte(`blaatert "[[henk]]" ding`)},
     {[]byte(`blaatert "[[henk]]" ding`), []byte(`blaatert "[[henk]]" ding`)},
+    {[]byte(`#tag`), []byte(`"#tag"`)},
+    {[]byte(`"#tag"`), []byte(`"#tag"`)},
   }
 
   for _, scenario := range scenarios {
