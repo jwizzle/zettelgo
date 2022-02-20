@@ -14,8 +14,7 @@ type Header struct {
 // Unmarshal header text to an object.
 // TODO Figure out way to make sure any header parse failures
 // Result in a warning.
-// Make in the form header.from_text
-func Header_from_text(text []byte) (*Header, error) {
+func NewHeader(text []byte) (*Header, error) {
 	data := Header{}
 
 	unmarshal_err := yaml.Unmarshal(text, &data)

@@ -1,4 +1,3 @@
-// TODO Finish
 package zettels
 
 import (
@@ -68,7 +67,7 @@ func Note_from_filepath(path string, config Cfg) (Note, error) {
 	headertext, err := headertext_from_filepath(path, config.Header_delimiter)
 	handle_error(err)
 	headertext = wrap_links(headertext)
-	newheader, err := Header_from_text(headertext)
+	newheader, err := NewHeader(headertext)
 	handle_error(err)
 
 	return Note{
