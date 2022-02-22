@@ -18,7 +18,7 @@ var (
 )
 
 // Builds the outputstring from the display var, per note.
-func build_outputstring(note zettels.Note) (string){
+func build_outputstring(note zettels.Note) (string, error){
 	out := ""
 
 	for _, content := range display {
@@ -28,12 +28,11 @@ func build_outputstring(note zettels.Note) (string){
 			case "path" :
 				out = out + note.Path + " "
 			default:
-				//TODO Handle better
-				panic("Malformed display param.")
+				return "", &DisplayParamMalformedError{}
 		}
 	}
 
-	return out
+	return out, nil
 }
 
 // listCmd represents the list command
@@ -41,11 +40,15 @@ var listCmd = &cobra.Command{
 	Use:   "list",
 	Short: "List zettels, by default just lists the titles.",
 	Long: `List all zettels in the directory found in the config file.`,
-	Run: func(cmd *cobra.Command, args []string) {
+	RunE: func(cmd *cobra.Command, args []string) (error) {
 		for _, note := range zettelBox.Notes {
-			output := build_outputstring(note)
+			output, err := build_outputstring(note)
+			if err != nil {
+				return err
+			}
 			fmt.Println(output)
 		}
+		return nil
 	},
 }
 
@@ -53,6 +56,7 @@ func init() {
 	rootCmd.AddCommand(listCmd)
 	listCmd.Flags().StringSliceVar(&display, "display", []string{"title"},
 	`Display control. Accepts a comma separated list of:
-	title (default)
-	path`)
+	- title
+	- path
+	`)
 }

@@ -25,9 +25,6 @@ examples and usage of using your application. For example:
 Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
-	// Uncomment the following line if your bare application
-	// has an action associated with it:
-	// Run: func(cmd *cobra.Command, args []string) { },
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
@@ -35,21 +32,9 @@ to quickly create a Cobra application.`,
 func Execute() {
 	err := rootCmd.Execute()
 	if err != nil {
+		handle_error(err)
 		os.Exit(1)
 	}
-}
-
-// Instantiate a new config, by combining the defaults that are hardcoded
-// and those read from '~/.zettelgo_conf.yaml' and CLI opts.
-func config_init(defaults *zettels.Cfg) (*zettels.Cfg) {
-	user_cfg, err := zettels.Cfg_from_file(CFG_FILE)
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(0)
-	}
-	defaults.Merge(*user_cfg)
-
-	return defaults
 }
 
 var (
@@ -66,6 +51,19 @@ func init() {
 
 	// Handle merging of config etc.
 	post_init()
+}
+
+// Instantiate a new config, by combining the defaults that are hardcoded
+// and those read from '~/.zettelgo_conf.yaml' and CLI opts.
+func config_init(defaults *zettels.Cfg) (*zettels.Cfg) {
+	user_cfg, err := zettels.Cfg_from_file(CFG_FILE)
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(0)
+	}
+	defaults.Merge(*user_cfg)
+
+	return defaults
 }
 
 // Post-init config handling.
