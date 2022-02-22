@@ -7,6 +7,7 @@ import (
   "fmt"
   "os"
 	"github.com/jwizzle/zettelgo/zettels"
+	"github.com/spf13/cobra"
 )
 
 var HOME, CFG_FILE string
