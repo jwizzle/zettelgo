@@ -15,11 +15,11 @@ func TestNewheader(t *testing.T) {
 	}
 	
 	for _, tmpfile := range tmpfiles {
-		headertext, err := headertext_from_filepath(tmpfile.path, cfg.Header_delimiter)
-		handle_error(err)
-		headertext = wrap_specialstrings(headertext)
+		headertext, err := headertextFromFilepath(tmpfile.path, cfg.Header_delimiter)
+		handleError(err)
+		headertext = wrapSpecialstrings(headertext)
 		newheader, err := NewHeader(headertext, tmpfile.path)
-		handle_error(err)
+		handleError(err)
 
 		if newheader.Title != tmpfile.header_expect.Title {
 			t.Errorf(

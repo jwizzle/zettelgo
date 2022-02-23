@@ -15,13 +15,13 @@ func TestBox(t *testing.T) {
 		},
 	}
 	box := Box{Config: cfg}
-	notes, err := box.gather_paths()
+	notes, err := box.gatherPaths()
   if err != nil {
     panic(err)
   }
 
   for _, tmpfile := range tmpfiles {
-    if ! util.String_in_slice(tmpfile.path, notes) {
+    if ! util.StringInSlice(tmpfile.path, notes) {
       t.Errorf("test_box: Note not gathered: %v", tmpfile.filename)
     }
   }
@@ -45,7 +45,7 @@ func TestPathInIgnorelist(t *testing.T) {
   }
 
   for _, scenario := range scenarios {
-    result := path_in_ignorelist(scenario.path, scenario.ignorelist)
+    result := pathInIgnorelist(scenario.path, scenario.ignorelist)
 
 		if result != scenario.expect {
 			t.Errorf(

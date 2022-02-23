@@ -15,7 +15,7 @@ func TestStringinslice(t *testing.T) {
   }
 
   for _, scenario := range scenarios {
-    result := String_in_slice(scenario.text, scenario.slice)
+    result := StringInSlice(scenario.text, scenario.slice)
 
 		if result != scenario.expect {
 			t.Errorf(

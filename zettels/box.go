@@ -17,12 +17,12 @@ type Box struct {
 // Fill up the box with notes gathered from disk.
 // Returns a reference to the filled box.
 func (self *Box) Fill() (*Box, error) {
-	paths, err := self.gather_paths()
-	handle_error(err)
+	paths, err := self.gatherPaths()
+	handleError(err)
 
 	for _, path := range paths {
-		newnote, err := Note_from_filepath(path, self.Config)
-		handle_error(err)
+		newnote, err := NoteFromFilepath(path, self.Config)
+		handleError(err)
 		self.Notes = append(self.Notes, newnote)
 	}
 
@@ -30,13 +30,13 @@ func (self *Box) Fill() (*Box, error) {
 }
 
 // Gather all paths of notes, using the config of the box for the root dir.
-func (self *Box) gather_paths() ([]string, error) {
+func (self *Box) gatherPaths() ([]string, error) {
   err := filepath.Walk(self.Config.Directory,
 		func(path string, info os.FileInfo, err error) error {
 			if info.IsDir() {
 				return nil
 			}
-			if ! path_in_ignorelist(path, self.Config.Ignore_list) {
+			if ! pathInIgnorelist(path, self.Config.Ignore_list) {
 				self.Notepaths = append(self.Notepaths, path)
 			}
 			return nil
@@ -46,7 +46,7 @@ func (self *Box) gather_paths() ([]string, error) {
 }
 
 // Check if a given path is in the given ignore list. Return True/False.
-func path_in_ignorelist(path string, ignore_list []string) (bool) {
+func pathInIgnorelist(path string, ignore_list []string) (bool) {
 	for _, ignore_item := range ignore_list {
 		if strings.Contains(path, ignore_item) {
 			return true

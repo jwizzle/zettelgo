@@ -9,7 +9,7 @@ func (m *DisplayParamMalformedError) Error() string {
 	return "Display param malformed."
 }
 
-func handle_error(e error) {
+func handleError(e error) {
     switch e.(type) {
 			case *DisplayParamMalformedError :
 				fmt.Println(e)

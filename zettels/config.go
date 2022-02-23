@@ -26,7 +26,7 @@ func (self *Cfg) Merge(other Cfg) {
 	}
 	if other.Ignore_list != nil {
 		for _, ignore_item := range other.Ignore_list {
-			if ! util.String_in_slice(ignore_item, self.Ignore_list) {
+			if ! util.StringInSlice(ignore_item, self.Ignore_list) {
 				self.Ignore_list = append(self.Ignore_list, ignore_item)
 			}
 		}
@@ -34,7 +34,7 @@ func (self *Cfg) Merge(other Cfg) {
 }
 
 // Load config from a yaml file. Returns an instantiated configuration.
-func Cfg_from_file(path string) (*Cfg, error) {
+func CfgFromFile(path string) (*Cfg, error) {
 	data := Cfg{}
 
 	yfile, yml_err := ioutil.ReadFile(path)

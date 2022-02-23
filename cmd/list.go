@@ -15,10 +15,11 @@ import (
 var (
 	display []string
 	display_allow []string = []string{"title", "path"}
+	title_filter string
 )
 
 // Builds the outputstring from the display var, per note.
-func build_outputstring(note zettels.Note) (string, error){
+func buildOutputstring(note zettels.Note) (string, error){
 	out := ""
 
 	for _, content := range display {
@@ -41,8 +42,10 @@ var listCmd = &cobra.Command{
 	Short: "List zettels, by default just lists the titles.",
 	Long: `List all zettels in the directory found in the config file.`,
 	RunE: func(cmd *cobra.Command, args []string) (error) {
-		for _, note := range zettelBox.Notes {
-			output, err := build_outputstring(note)
+		notes := zettelBox.Notes
+
+		for _, note := range notes {
+			output, err := buildOutputstring(note)
 			if err != nil {
 				return err
 			}
@@ -54,6 +57,8 @@ var listCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(listCmd)
+	// TODO Implement
+	listCmd.Flags().StringVar(&title_filter, "title", "", "Filter results by title.")
 	listCmd.Flags().StringSliceVar(&display, "display", []string{"title"},
 	`Display control. Accepts a comma separated list of:
 	- title

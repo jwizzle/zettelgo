@@ -16,11 +16,11 @@ type Note struct {
 }
 
 // Return the header []byte from a filepath. Without delimiters.
-func headertext_from_filepath(path string, delimiter string) ([]byte, error) {
+func headertextFromFilepath(path string, delimiter string) ([]byte, error) {
 	var header []byte
 	headeropened := false
 	file, err := os.Open(path)
-	handle_error(err)
+	handleError(err)
 	defer file.Close()
 
 	scanner := bufio.NewScanner(file)
@@ -49,7 +49,7 @@ func headertext_from_filepath(path string, delimiter string) ([]byte, error) {
 }
 
 // Wrap all occurences of an unquoted text in quotes.
-func wrap_in_text(text []byte, unquoted_text []byte) ([]byte) {
+func wrapInText(text []byte, unquoted_text []byte) ([]byte) {
 	quoted := []byte("\"" + string(unquoted_text) + "\"")
 	if ! bytes.Contains(text, quoted){
 		text = bytes.ReplaceAll(text, unquoted_text, quoted)
@@ -59,29 +59,29 @@ func wrap_in_text(text []byte, unquoted_text []byte) ([]byte) {
 
 // Wrap all links and tags in the header text with '' if they aren't already.
 // Needed for yaml validation. Since [[]] are invalig in unwrapped strings.
-func wrap_specialstrings(text []byte) ([]byte) {
+func wrapSpecialstrings(text []byte) ([]byte) {
 	link_regexp := regexp.MustCompile(`\[\[[\w\._ ]+\]\]`)
 	tag_regexp := regexp.MustCompile(`#\w+`)
 	unquoted_links := link_regexp.FindAll(text, -1)
 	unquoted_tags := tag_regexp.FindAll(text, -1)
 
 	for _, unq_link := range unquoted_links {
-		text = wrap_in_text(text, unq_link)
+		text = wrapInText(text, unq_link)
 	}
 	for _, unq_tag := range unquoted_tags {
-		text = wrap_in_text(text, unq_tag)
+		text = wrapInText(text, unq_tag)
 	}
 
 	return text
 }
 
 // Read a zettel and return a parsed Note object.
-func Note_from_filepath(path string, config Cfg) (Note, error) {
-	headertext, err := headertext_from_filepath(path, config.Header_delimiter)
-	handle_error(err)
-	headertext = wrap_specialstrings(headertext)
+func NoteFromFilepath(path string, config Cfg) (Note, error) {
+	headertext, err := headertextFromFilepath(path, config.Header_delimiter)
+	handleError(err)
+	headertext = wrapSpecialstrings(headertext)
 	newheader, err := NewHeader(headertext, path)
-	handle_error(err)
+	handleError(err)
 
 	return Note{
 		Title: newheader.Title,

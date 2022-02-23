@@ -13,8 +13,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-
-
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "zettelgo",
@@ -32,7 +30,7 @@ to quickly create a Cobra application.`,
 func Execute() {
 	err := rootCmd.Execute()
 	if err != nil {
-		handle_error(err)
+		handleError(err)
 		os.Exit(1)
 	}
 }
@@ -50,13 +48,13 @@ func init() {
 	rootCmd.PersistentFlags().StringVar(&CFG_FILE, "config", "", "config file (default is $HOME/.zettelgo_conf.yaml)")
 
 	// Handle merging of config etc.
-	post_init()
+	postinit()
 }
 
 // Instantiate a new config, by combining the defaults that are hardcoded
 // and those read from '~/.zettelgo_conf.yaml' and CLI opts.
-func config_init(defaults *zettels.Cfg) (*zettels.Cfg) {
-	user_cfg, err := zettels.Cfg_from_file(CFG_FILE)
+func configInit(defaults *zettels.Cfg) (*zettels.Cfg) {
+	user_cfg, err := zettels.CfgFromFile(CFG_FILE)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(0)
@@ -67,13 +65,13 @@ func config_init(defaults *zettels.Cfg) (*zettels.Cfg) {
 }
 
 // Post-init config handling.
-func post_init() {
+func postinit() {
 	if CFG_FILE == ""{
 		HOME = os.Getenv("HOME")
 		CFG_FILE = HOME + "/.zettelgo_conf.yaml"
 	}
 
-	zettelCfg = *config_init(&zettels.Cfg{
+	zettelCfg = *configInit(&zettels.Cfg{
 		Directory: HOME + "/.zettelkasten",
 		Ignore_list: []string{
 			".git",

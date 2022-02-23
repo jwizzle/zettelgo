@@ -15,7 +15,7 @@ func TestNotefromfile(t *testing.T) {
 	}
 
 	for _, tmpfile := range tmpfiles {
-		newnote, _ := Note_from_filepath(tmpfile.path, cfg)
+		newnote, _ := NoteFromFilepath(tmpfile.path, cfg)
 		expect_note := Note{
 			Title: tmpfile.header_expect.Title,
 			Path: tmpfile.path,
@@ -43,7 +43,7 @@ func TestHeadertextfrompath(t *testing.T) {
 	}
 
 	for _, tmpfile := range tmpfiles {
-		_, err := headertext_from_filepath(tmpfile.path, cfg.Header_delimiter)
+		_, err := headertextFromFilepath(tmpfile.path, cfg.Header_delimiter)
 		if err != nil {
 			t.Errorf(
         "test_headertext_from_path: non-nil error filename: %v, err: %v, content %v.",
@@ -66,7 +66,7 @@ func TestSpecialwrapping(t *testing.T) {
   }
 
   for _, scenario := range scenarios {
-    result := wrap_specialstrings(scenario.bytein)
+    result := wrapSpecialstrings(scenario.bytein)
 
 		if string(result) != string(scenario.expect) {
 			t.Errorf(
