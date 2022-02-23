@@ -14,14 +14,14 @@ import (
 
 var (
 	display []string
-	display_allow []string = []string{"title", "path"}
-	title_filter string
+	displayAllow []string = []string{"title", "path"}
+	titleFilter string
+	jsonFilter string
 )
 
 // Builds the outputstring from the display var, per note.
-func buildOutputstring(note zettels.Note) (string, error){
+func buildDisplaystring(note zettels.Note) (string, error){
 	out := ""
-
 	for _, content := range display {
 		switch content {
 			case "title" :
@@ -32,7 +32,6 @@ func buildOutputstring(note zettels.Note) (string, error){
 				return "", &DisplayParamMalformedError{}
 		}
 	}
-
 	return out, nil
 }
 
@@ -42,10 +41,11 @@ var listCmd = &cobra.Command{
 	Short: "List zettels, by default just lists the titles.",
 	Long: `List all zettels in the directory found in the config file.`,
 	RunE: func(cmd *cobra.Command, args []string) (error) {
-		notes := zettelBox.Notes
+		// TODO jsonfilter/titlefilter los
+		notes := zettelBox.GetNotesS(jsonFilter)
 
 		for _, note := range notes {
-			output, err := buildOutputstring(note)
+			output, err := buildDisplaystring(note)
 			if err != nil {
 				return err
 			}
@@ -58,7 +58,11 @@ var listCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(listCmd)
 	// TODO Implement
-	listCmd.Flags().StringVar(&title_filter, "title", "", "Filter results by title.")
+	listCmd.Flags().StringVar(&titleFilter, "title", "", "Filter results by title.")
+	// TODO Implement
+	listCmd.Flags().StringVar(&jsonFilter, "filter", "",
+	`Filter by json (eg. {"title": "my little pony screenplay", "tag": "#bighitsforthefuture"}).
+	If this is given, all other filterflags like "title" are ignored.`)
 	listCmd.Flags().StringSliceVar(&display, "display", []string{"title"},
 	`Display control. Accepts a comma separated list of:
 	- title

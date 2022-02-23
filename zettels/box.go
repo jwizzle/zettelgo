@@ -14,6 +14,21 @@ type Box struct {
 	Config Cfg
 }
 
+// Retrieve notes from the box.
+// Possibly filtered by a json string.
+func (self *Box) GetNotesS(filterstring string) ([]Note) {
+	notes := []Note{}
+	filter := NoteFilterFromString(filterstring)
+
+	for _, note := range self.Notes {
+		if filter.Match(note) {
+			notes = append(notes, note)
+		}
+	}
+
+	return notes
+}
+
 // Fill up the box with notes gathered from disk.
 // Returns a reference to the filled box.
 func (self *Box) Fill() (*Box, error) {

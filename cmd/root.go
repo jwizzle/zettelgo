@@ -37,15 +37,15 @@ func Execute() {
 
 var (
 	// Used for flags.
-	HOME string
-	CFG_FILE string
+	userHome string
+	cfgPath string
 	zettelCfg zettels.Cfg
 	zettelBox zettels.Box
 )
 
 func init() {
 	// Persistent flags
-	rootCmd.PersistentFlags().StringVar(&CFG_FILE, "config", "", "config file (default is $HOME/.zettelgo_conf.yaml)")
+	rootCmd.PersistentFlags().StringVar(&cfgPath, "config", "", "config file (default is $HOME/.zettelgo_conf.yaml)")
 
 	// Handle merging of config etc.
 	postinit()
@@ -54,25 +54,25 @@ func init() {
 // Instantiate a new config, by combining the defaults that are hardcoded
 // and those read from '~/.zettelgo_conf.yaml' and CLI opts.
 func configInit(defaults *zettels.Cfg) (*zettels.Cfg) {
-	user_cfg, err := zettels.CfgFromFile(CFG_FILE)
+	userCfg, err := zettels.CfgFromFile(cfgPath)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(0)
 	}
-	defaults.Merge(*user_cfg)
+	defaults.Merge(*userCfg)
 
 	return defaults
 }
 
 // Post-init config handling.
 func postinit() {
-	if CFG_FILE == ""{
-		HOME = os.Getenv("HOME")
-		CFG_FILE = HOME + "/.zettelgo_conf.yaml"
+	if cfgPath == ""{
+		userHome = os.Getenv("HOME")
+		cfgPath = userHome + "/.zettelgo_conf.yaml"
 	}
 
 	zettelCfg = *configInit(&zettels.Cfg{
-		Directory: HOME + "/.zettelkasten",
+		Directory: userHome + "/.zettelkasten",
 		Ignore_list: []string{
 			".git",
 		},
