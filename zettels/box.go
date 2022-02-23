@@ -16,9 +16,12 @@ type Box struct {
 
 // Retrieve notes from the box.
 // Possibly filtered by a json string.
-func (self *Box) GetNotesS(filterstring string) ([]Note) {
+func (self *Box) GetNotesS(filterstring string) ([]Note, error) {
 	notes := []Note{}
-	filter := NoteFilterFromString(filterstring)
+	filter, err := NoteFilterFromString(filterstring)
+	if err != nil {
+		return []Note{}, err
+	}
 
 	for _, note := range self.Notes {
 		if filter.Match(note) {
@@ -26,7 +29,7 @@ func (self *Box) GetNotesS(filterstring string) ([]Note) {
 		}
 	}
 
-	return notes
+	return notes, nil
 }
 
 // Fill up the box with notes gathered from disk.

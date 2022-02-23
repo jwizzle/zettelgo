@@ -17,6 +17,7 @@ var (
 	displayAllow []string = []string{"title", "path"}
 	titleFilter string
 	jsonFilter string
+	tagFilter string
 )
 
 // Builds the outputstring from the display var, per note.
@@ -41,8 +42,11 @@ var listCmd = &cobra.Command{
 	Short: "List zettels, by default just lists the titles.",
 	Long: `List all zettels in the directory found in the config file.`,
 	RunE: func(cmd *cobra.Command, args []string) (error) {
-		// TODO jsonfilter/titlefilter los
-		notes := zettelBox.GetNotesS(jsonFilter)
+		if jsonFilter == "" {
+			jsonFilter = fmt.Sprintf(`{"title": "%v", "tag": "%v"}`, titleFilter, tagFilter)
+		}
+		notes, err := zettelBox.GetNotesS(jsonFilter)
+		handleError(err)
 
 		for _, note := range notes {
 			output, err := buildDisplaystring(note)
@@ -57,9 +61,8 @@ var listCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(listCmd)
-	// TODO Implement
 	listCmd.Flags().StringVar(&titleFilter, "title", "", "Filter results by title.")
-	// TODO Implement
+	listCmd.Flags().StringVar(&tagFilter, "tag", "", "Filter results by tag.")
 	listCmd.Flags().StringVar(&jsonFilter, "filter", "",
 	`Filter by json (eg. {"title": "my little pony screenplay", "tag": "#bighitsforthefuture"}).
 	If this is given, all other filterflags like "title" are ignored.`)
