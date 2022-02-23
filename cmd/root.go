@@ -24,8 +24,9 @@ Notes with invalid headers are ignored. See an example below:
 ---
 # Everything between the dashes is parsed as yaml.
 title: Thread level midnight
+date: 2021-11-21T12:14
 tags:
-  - #dnd
+  - #Awardwinningscreenplayideas
 links:
   Index: [[184949_20211009_index.md]] # Links are wrapped in quotes by zettelgo.
 ---
