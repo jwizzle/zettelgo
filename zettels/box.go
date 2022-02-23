@@ -18,7 +18,7 @@ type Box struct {
 // Possibly filtered by a json string.
 func (self *Box) GetNotesS(filterstring string) ([]Note, error) {
 	notes := []Note{}
-	filter, err := NoteFilterFromString(filterstring)
+	filter, err := NewNoteFilter(filterstring)
 	if err != nil {
 		return []Note{}, err
 	}

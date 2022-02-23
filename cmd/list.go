@@ -46,7 +46,9 @@ var listCmd = &cobra.Command{
 			jsonFilter = fmt.Sprintf(`{"title": "%v", "tag": "%v"}`, titleFilter, tagFilter)
 		}
 		notes, err := zettelBox.GetNotesS(jsonFilter)
-		handleError(err)
+		if err != nil {
+			return err
+		}
 
 		for _, note := range notes {
 			output, err := buildDisplaystring(note)

@@ -25,7 +25,7 @@ func (self *NoteFilter) Match(note Note) (bool) {
 }
 
 // Create a notefilter from a json string.
-func NoteFilterFromString(jsonstring string) (NoteFilter, error) {
+func NewNoteFilter(jsonstring string) (NoteFilter, error) {
 	if jsonstring == "" {
 		return NoteFilter{}, nil
 	}
