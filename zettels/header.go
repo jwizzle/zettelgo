@@ -9,6 +9,7 @@ type Header struct {
 	Date string `yaml:"date"`
 	Tags []string `yaml:"tags"`
 	Links map[string]string `yaml:"links"`
+	Delimiter string
 }
 
 // Unmarshal header bytestring to an object.

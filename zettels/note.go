@@ -15,6 +15,42 @@ type Note struct {
 	Header Header
 }
 
+func (self *Note) GetFullContent() ([]byte, error) {
+	content, err := os.ReadFile(self.Path)
+	if err != nil {
+		return nil, err
+	}
+	return content, nil
+}
+
+func (self *Note) GetContent() ([]byte, error) {
+	var content []byte
+	headerDelims := 0
+	file, err := os.Open(self.Path)
+	if err != nil {
+		return nil, err
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		if headerDelims < 2 {
+			if scanner.Text() == self.Header.Delimiter {
+				headerDelims = headerDelims + 1
+			}
+		} else {
+			for _, i := range scanner.Bytes() {
+				content = append(content, i)
+			}
+			for _, i := range []byte("\n") {
+				content = append(content, i)
+			}
+		}
+	}
+
+	return content, nil
+}
+
 // Return the header []byte from a filepath. Without delimiters.
 func headertextFromFilepath(path string, delimiter string) ([]byte, error) {
 	var header []byte
@@ -81,6 +117,7 @@ func NoteFromFilepath(path string, config Cfg) (Note, error) {
 	handleError(err)
 	headertext = wrapSpecialstrings(headertext)
 	newheader, err := NewHeader(headertext, path)
+	newheader.Delimiter = config.Header_delimiter
 	handleError(err)
 
 	return Note{

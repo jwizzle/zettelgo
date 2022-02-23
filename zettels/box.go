@@ -1,6 +1,7 @@
 package zettels
 
 import (
+	"errors"
   "os"
 	"strings"
   "path/filepath"
@@ -12,6 +13,16 @@ type Box struct {
 	Notes []Note
 	Notepaths []string
 	Config Cfg
+}
+
+// Retrieve a note from the box.
+func (self *Box) GetNote(arg string) (Note, error) {
+	for _, note := range self.Notes {
+		if strings.Contains(note.Title, arg) || strings.Contains(note.Path, arg) {
+			return note, nil
+		}
+	}
+	return Note{}, errors.New("Note not found.")
 }
 
 // Retrieve notes from the box.

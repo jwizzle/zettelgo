@@ -15,7 +15,7 @@ func handleError(e error) {
 				fmt.Println(e)
 			default:
 				if e != nil {
-						panic(e)
+					fmt.Println(e)
 				}
     }
 }
