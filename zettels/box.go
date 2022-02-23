@@ -50,7 +50,7 @@ func (self *Box) Fill() (*Box, error) {
 	handleError(err)
 
 	for _, path := range paths {
-		newnote, err := NoteFromFilepath(path, self.Config)
+		newnote, err := NewNote(path, self.Config)
 		handleError(err)
 		self.Notes = append(self.Notes, newnote)
 	}

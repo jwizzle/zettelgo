@@ -15,7 +15,7 @@ func TestNotefromfile(t *testing.T) {
 	}
 
 	for _, tmpfile := range tmpfiles {
-		newnote, _ := NoteFromFilepath(tmpfile.path, cfg)
+		newnote, _ := NewNote(tmpfile.path, cfg)
 		expect_note := Note{
 			Title: tmpfile.header_expect.Title,
 			Path: tmpfile.path,

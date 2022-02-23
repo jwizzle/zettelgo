@@ -12,6 +12,7 @@ type Note struct {
 	Title string
 	Path string
 	Link string
+	HeaderDelimiter string
 	Header Header
 }
 
@@ -35,7 +36,7 @@ func (self *Note) GetContent() ([]byte, error) {
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
 		if headerDelims < 2 {
-			if scanner.Text() == self.Header.Delimiter {
+			if scanner.Text() == self.HeaderDelimiter {
 				headerDelims = headerDelims + 1
 			}
 		} else {
@@ -112,17 +113,17 @@ func wrapSpecialstrings(text []byte) ([]byte) {
 }
 
 // Read a zettel and return a parsed Note object.
-func NoteFromFilepath(path string, config Cfg) (Note, error) {
+func NewNote(path string, config Cfg) (Note, error) {
 	headertext, err := headertextFromFilepath(path, config.Header_delimiter)
 	handleError(err)
 	headertext = wrapSpecialstrings(headertext)
 	newheader, err := NewHeader(headertext, path)
-	newheader.Delimiter = config.Header_delimiter
 	handleError(err)
 
 	return Note{
 		Title: newheader.Title,
 		Header: *newheader,
 		Path: path,
+		HeaderDelimiter: config.Header_delimiter,
 	}, nil
 }
