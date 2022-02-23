@@ -17,12 +17,22 @@ import (
 var rootCmd = &cobra.Command{
 	Use:   "zettelgo",
 	Short: "A zettelkasten management tool written in Go.",
-	Long: `A longer description that spans multiple lines and likely contains
-examples and usage of using your application. For example:
+	Long: `Interface with a folder on your system housing zettels/notes.
+Explore your zettelkasten from the commandline. Relations between zettels
+are mapped by placing a header at the top of your zettel in yaml format.
+Notes with invalid headers are ignored. See an example below:
+---
+# Everything between the dashes is parsed as yaml.
+title: Thread level midnight
+tags:
+  - #dnd
+links:
+  Index: [[184949_20211009_index.md]] # Links are wrapped in quotes by zettelgo.
+---
+Place the content of your zettel etc. here. I usually use markdown.
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+Config is loaded from ~/.zettelgo_conf.yaml by default. If none is present
+defaults will be used. Which assumes your zettels are stored in ~/.zettelkasten.`,
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
