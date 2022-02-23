@@ -15,9 +15,6 @@ import (
 var (
 	display []string
 	displayAllow []string = []string{"title", "path"}
-	titleFilter string
-	jsonFilter string
-	tagFilter string
 )
 
 // Builds the outputstring from the display var, per note.
@@ -63,14 +60,10 @@ var listCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(listCmd)
-	listCmd.Flags().StringVar(&titleFilter, "title", "", "Filter results by title.")
-	listCmd.Flags().StringVar(&tagFilter, "tag", "", "Filter results by tag.")
-	listCmd.Flags().StringVar(&jsonFilter, "filter", "",
-	`Filter by json (eg. {"title": "my little pony screenplay", "tag": "#bighitsforthefuture"}).
-	If this is given, all other filterflags like "title" are ignored.`)
 	listCmd.Flags().StringSliceVar(&display, "display", []string{"title"},
 	`Display control. Accepts a comma separated list of:
 	- title
 	- path
 	`)
+	filterable(listCmd)
 }
