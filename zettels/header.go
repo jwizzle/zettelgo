@@ -1,6 +1,8 @@
 package zettels
 
 import (
+	"fmt"
+
   "gopkg.in/yaml.v3"
 )
 // Represent the header of a note.
@@ -9,6 +11,16 @@ type Header struct {
 	Date string `yaml:"date"`
 	Tags []string `yaml:"tags"`
 	Links map[string]string `yaml:"links"`
+}
+
+// Return the header as a marshalled string.
+func (self *Header) Display() (string, error) {
+	ymlcont, err := yaml.Marshal(self)
+	if err != nil {
+		return "", err
+	}
+	out := fmt.Sprintf("%s", string(ymlcont))
+	return out, nil
 }
 
 // Unmarshal header bytestring to an object.

@@ -14,6 +14,7 @@ import (
 
 var (
 	showHeader bool
+	headerOnly bool
 )
 
 // showCmd represents the show command
@@ -33,14 +34,21 @@ var showCmd = &cobra.Command{
 		}
 
 		var notecontent []byte
-		if showHeader {
-			notecontent, err = note.GetFullContent()
+		if headerOnly {
+			var headerstring string
+			headerstring, err = note.Header.Display()
+			notecontent = []byte(headerstring)
 		} else {
-			notecontent, err = note.GetContent()
+			if showHeader {
+				notecontent, err = note.GetFullContent()
+			} else {
+				notecontent, err = note.GetContent()
+			}
 		}
 		if err != nil {
 			return err
 		}
+
 		fmt.Println(string(notecontent))
 		return nil
 	},
@@ -49,4 +57,5 @@ var showCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(showCmd)
 	showCmd.Flags().BoolVar(&showHeader, "header", false, "Display header in output.")
+	showCmd.Flags().BoolVar(&headerOnly, "header-only", false, "Display header only.")
 }

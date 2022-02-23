@@ -16,6 +16,7 @@ type Note struct {
 	Header Header
 }
 
+// Return the full filecontent of the note.
 func (self *Note) GetFullContent() ([]byte, error) {
 	content, err := os.ReadFile(self.Path)
 	if err != nil {
@@ -24,6 +25,7 @@ func (self *Note) GetFullContent() ([]byte, error) {
 	return content, nil
 }
 
+// Return the content of the note, minus the header.
 func (self *Note) GetContent() ([]byte, error) {
 	var content []byte
 	headerDelims := 0
