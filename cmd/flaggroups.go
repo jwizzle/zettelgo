@@ -16,5 +16,5 @@ If this is given, all other filterflags or arguments are ignored.`)
 // Add to commands that allow json output.
 var jsonOut bool
 func jsonable(cmd *cobra.Command) {
-	cmd.Flags().BoolVar(&jsonOut, "json", false, "Return json output.")
+	cmd.Flags().BoolVar(&jsonOut, "json", false, "Return json output, ignores all other display control flags.")
 }
