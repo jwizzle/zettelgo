@@ -14,7 +14,7 @@ import (
 
 var (
 	display []string
-	displayAllow []string = []string{"title", "path"}
+	displayAllow []string = []string{"title", "path", "filename"}
 )
 
 // Builds the outputstring from the display var, per note.
@@ -26,6 +26,8 @@ func buildDisplaystring(note zettels.Note) (string, error){
 				out = out + note.Title + " "
 			case "path" :
 				out = out + note.Path + " "
+			case "filename" :
+				out = out + note.Filename + " "
 			default:
 				return "", &DisplayParamMalformedError{}
 		}
@@ -82,6 +84,7 @@ func init() {
 	`Display control. Accepts a comma separated list of:
 	- title
 	- path
+	- filename
 	`)
 	filterable(listCmd)
 }
