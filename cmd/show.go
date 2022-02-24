@@ -6,6 +6,7 @@ package cmd
 
 import (
 	"fmt"
+	"errors"
 
 	"github.com/jwizzle/zettelgo/zettels"
 
@@ -28,13 +29,29 @@ When using a title to filter as the argument. The first note where the argument 
 a substring of the title of that note, that note is returned.
 This might yield unexpected results. For example if you search for a note with the
 title "her" but a note with the title "where I keep the bodies" is evaluated first.`,
-  Args: cobra.ExactArgs(1),
+  Args: func(cmd *cobra.Command, args []string) error {
+    if len(args) != 1 && jsonFilter == "" {
+      return errors.New("Requires either an argument or a json filter.")
+    }
+    return nil
+  },
 	RunE: func(cmd *cobra.Command, args []string) (error) {
-		filter := zettels.NoteFilter{
-			Title: args[0],
-			Path: args[0],
-			Filename: args[0],
+		var filter zettels.NoteFilter
+		var err error
+
+		if jsonFilter == "" {
+			filter = zettels.NoteFilter{
+				Title: args[0],
+				Path: args[0],
+				Filename: args[0],
+			}
+		} else {
+			filter, err = zettels.NewNoteFilter(jsonFilter)
+			if err != nil {
+				return err
+			}
 		}
+
 		note, err := zettelBox.GetNote(filter)
 		if err != nil {
 			return err
@@ -65,4 +82,5 @@ func init() {
 	rootCmd.AddCommand(showCmd)
 	showCmd.Flags().BoolVar(&showHeader, "header", false, "Display header in output.")
 	showCmd.Flags().BoolVar(&headerOnly, "header-only", false, "Display header only.")
+	filterable(showCmd)
 }

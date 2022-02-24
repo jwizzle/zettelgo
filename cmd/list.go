@@ -15,6 +15,8 @@ import (
 var (
 	display []string
 	displayAllow []string = []string{"title", "path", "filename"}
+	titleFilter string
+	tagFilter string
 )
 
 // Builds the outputstring from the display var, per note.
@@ -86,5 +88,7 @@ func init() {
 	- path
 	- filename
 	`)
+	listCmd.Flags().StringVar(&titleFilter, "title", "", "Filter results by title.")
+	listCmd.Flags().StringVar(&tagFilter, "tag", "", "Filter results by tag.")
 	filterable(listCmd)
 }
