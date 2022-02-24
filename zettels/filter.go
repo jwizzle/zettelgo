@@ -19,18 +19,18 @@ type NoteFilter struct {
 
 // Check if any of the filter fields match the given note.
 func (self *NoteFilter) MatchAny(note Note) (bool) {
+	if self.Path != "" && self.Path == note.Path {
+		return true
+	}
+	if self.Filename != "" && self.Filename == note.Filename {
+		return true
+	}
 	if self.Title != "" && strings.Contains(note.Title, self.Title) {
 		return true
 	}
 	if self.Tag != "" && (
 		util.StringInSlice(self.Tag, note.Header.Tags) && 
 		util.StringInSlice("#" + self.Tag, note.Header.Tags)) {
-		return true
-	}
-	if self.Path != "" && self.Path == note.Path {
-		return true
-	}
-	if self.Filename != "" && self.Filename == note.Filename {
 		return true
 	}
 	return false

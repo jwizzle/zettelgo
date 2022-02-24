@@ -22,14 +22,20 @@ var (
 var showCmd = &cobra.Command{
 	Use:   "show",
 	Short: "Show the contents of a zettel.",
-	Long: `Show the contents of a zettel.`,
+	Long: `Show the contents of a zettel. By default the matching can be done quite
+loosely depending on your input. A full path is always matched first, and should
+be consistent. A filename should be precise, it tries to match these second.
+When using a title to filter as the argument. The first note where the argument is
+a substring of the title of that note, that note is returned.
+This might yield unexpected results. For example if you search for a note with the
+title "her" but a note with the title "where I keep the bodies" is evaluated first.`,
   Args: cobra.ExactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) (error) {
 		splitarg := strings.Split(args[0], "/")
 		pathlessArg := splitarg[len(splitarg) - 1]
 		filter := zettels.NoteFilter{
 			Title: pathlessArg,
-			Path: pathlessArg,
+			Path: args[0],
 			Filename: pathlessArg,
 		}
 		note, err := zettelBox.GetNote(filter)
