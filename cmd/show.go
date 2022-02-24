@@ -6,7 +6,6 @@ package cmd
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/jwizzle/zettelgo/zettels"
 
@@ -31,12 +30,10 @@ This might yield unexpected results. For example if you search for a note with t
 title "her" but a note with the title "where I keep the bodies" is evaluated first.`,
   Args: cobra.ExactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) (error) {
-		splitarg := strings.Split(args[0], "/")
-		pathlessArg := splitarg[len(splitarg) - 1]
 		filter := zettels.NoteFilter{
-			Title: pathlessArg,
+			Title: args[0],
 			Path: args[0],
-			Filename: pathlessArg,
+			Filename: args[0],
 		}
 		note, err := zettelBox.GetNote(filter)
 		if err != nil {
