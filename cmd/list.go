@@ -20,6 +20,25 @@ var (
 	tagFilter string
 )
 
+func makeListFilter() (zettels.NoteFilter, error) {
+	var filter zettels.NoteFilter
+	var err error
+
+	if jsonFilter == "" {
+		filter = zettels.NoteFilter{
+			Title: titleFilter,
+			Tag: tagFilter,
+		}
+	} else {
+		filter, err = zettels.NewNoteFilter(jsonFilter)
+		if err != nil {
+			return zettels.NoteFilter{}, err
+		}
+	}
+
+	return filter, nil
+}
+
 // Builds the outputstring from the display var, per note.
 func buildDisplaystring(note zettels.Note) (string, error){
 	out := ""
@@ -38,46 +57,30 @@ func buildDisplaystring(note zettels.Note) (string, error){
 	return out, nil
 }
 
-func listNotes() (error) {
-	var filter zettels.NoteFilter
-	var err error
-
-	if jsonFilter == "" {
-		filter = zettels.NoteFilter{
-			Title: titleFilter,
-			Tag: tagFilter,
-		}
-	} else {
-		filter, err = zettels.NewNoteFilter(jsonFilter)
-		if err != nil {
-			return err
-		}
-	}
-
-	notes, err := zettelBox.GetNotesS(filter)
-	if err != nil {
-		return err
-	}
-	for _, note := range notes {
-		output, err := buildDisplaystring(note)
-		if err != nil {
-			return err
-		}
-		fmt.Println(output)
-	}
-
-	return nil
-}
-
 // listCmd represents the list command
 var listCmd = &cobra.Command{
 	Use:   "list",
 	Short: "List zettels, by default just lists the titles.",
 	Long: `List all zettels in the directory found in the config file.`,
 	RunE: func(cmd *cobra.Command, args []string) (error) {
-		var err error
-		err = listNotes()
-		return err
+		filter, err := makeListFilter()
+		if err != nil {
+			return err
+		}
+		notes, err := zettelBox.GetNotesS(filter)
+		if err != nil {
+			return err
+		}
+
+		for _, note := range notes {
+			output, err := buildDisplaystring(note)
+			if err != nil {
+				return err
+			}
+			fmt.Println(output)
+		}
+
+		return nil
 	},
 }
 

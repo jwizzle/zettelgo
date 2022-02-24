@@ -10,6 +10,7 @@ type Header struct {
 	Title string `yaml:"title"`
 	Date string `yaml:"date"`
 	Tags []string `yaml:"tags"`
+	// TODO Moet dit hele pad zijn?
 	Links map[string]string `yaml:"links"`
 }
 
