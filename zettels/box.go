@@ -1,3 +1,4 @@
+// Provides functions to interface with a collection of zettels/notes.
 package zettels
 
 import (
