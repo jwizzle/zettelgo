@@ -18,6 +18,49 @@ var (
 	headerOnly bool
 )
 
+func makeShowFilter(args []string) (zettels.NoteFilter, error) {
+	var filter zettels.NoteFilter
+	var err error
+	if jsonFilter == "" {
+		filter = zettels.NoteFilter{
+			Title: args[0],
+			Path: args[0],
+			Filename: args[0],
+		}
+	} else {
+		filter, err = zettels.NewNoteFilter(jsonFilter)
+		if err != nil {
+			return zettels.NoteFilter{}, err
+		}
+	}
+
+	return filter, nil
+}
+
+func makeShowOut(note zettels.Note) ([]byte, error) {
+	var notecontent []byte
+	var err error
+	if jsonOut {
+		notecontent, err = note.ToJson()
+	} else {
+		if headerOnly {
+			var headerstring string
+			headerstring, err = note.Header.Display()
+			notecontent = []byte(headerstring)
+		} else {
+			if showHeader {
+				notecontent, err = note.GetFullContent()
+			} else {
+				notecontent, err = note.GetContent()
+			}
+		}
+	}
+	if err != nil {
+		return nil, err
+	}
+	return notecontent, nil
+}
+
 // showCmd represents the show command
 var showCmd = &cobra.Command{
 	Use:   "show",
@@ -36,48 +79,20 @@ title "her" but a note with the title "where I keep the bodies" is evaluated fir
     return nil
   },
 	RunE: func(cmd *cobra.Command, args []string) (error) {
-		var filter zettels.NoteFilter
-		var err error
-
-		if jsonFilter == "" {
-			filter = zettels.NoteFilter{
-				Title: args[0],
-				Path: args[0],
-				Filename: args[0],
-			}
-		} else {
-			filter, err = zettels.NewNoteFilter(jsonFilter)
-			if err != nil {
-				return err
-			}
+		filter, err := makeShowFilter(args)
+		if err != nil {
+			return err
 		}
-
 		note, err := zettelBox.GetNote(filter)
 		if err != nil {
 			return err
 		}
-
-		var notecontent []byte
-		if jsonOut {
-			notecontent, err = note.ToJson()
-		} else {
-			if headerOnly {
-				var headerstring string
-				headerstring, err = note.Header.Display()
-				notecontent = []byte(headerstring)
-			} else {
-				if showHeader {
-					notecontent, err = note.GetFullContent()
-				} else {
-					notecontent, err = note.GetContent()
-				}
-			}
-		}
+		out, err := makeShowOut(note)
 		if err != nil {
 			return err
 		}
 
-		fmt.Println(string(notecontent))
+		fmt.Println(string(out))
 		return nil
 	},
 }
