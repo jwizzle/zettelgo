@@ -19,6 +19,7 @@ type Note struct {
 	Header Header
 }
 
+// Return json byte representation.
 func (self *Note) ToJson() ([]byte, error) {
 	jsonbytes, err := json.Marshal(self)
 	if err != nil{

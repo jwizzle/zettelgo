@@ -1,4 +1,3 @@
-// TODO json out
 /*
 Copyright © 2022 jwizzle info@hossel.net
 
@@ -39,6 +38,32 @@ func makeListFilter() (zettels.NoteFilter, error) {
 	return filter, nil
 }
 
+func makeListOut(filter zettels.NoteFilter) (string, error) {
+	if jsonOut {
+		jsonbytes, err := zettelBox.ToJson(filter)
+		if err != nil {
+			return "", err
+		}
+
+		return string(jsonbytes), nil
+	} else {
+		output := ""
+		notes, err := zettelBox.GetNotesS(filter)
+		if err != nil {
+			return "", err
+		}
+
+		for _, note := range notes {
+			newline, err := buildDisplaystring(note)
+			if err != nil {
+				return "", err
+			}
+			output = output + newline
+		}
+		return output, nil
+	}
+}
+
 // Builds the outputstring from the display var, per note.
 func buildDisplaystring(note zettels.Note) (string, error){
 	out := ""
@@ -54,7 +79,7 @@ func buildDisplaystring(note zettels.Note) (string, error){
 				return "", &DisplayParamMalformedError{}
 		}
 	}
-	return out, nil
+	return out + "\n", nil
 }
 
 // listCmd represents the list command
@@ -67,19 +92,12 @@ var listCmd = &cobra.Command{
 		if err != nil {
 			return err
 		}
-		notes, err := zettelBox.GetNotesS(filter)
+		out, err := makeListOut(filter)
 		if err != nil {
 			return err
 		}
 
-		for _, note := range notes {
-			output, err := buildDisplaystring(note)
-			if err != nil {
-				return err
-			}
-			fmt.Println(output)
-		}
-
+		fmt.Println(out)
 		return nil
 	},
 }
@@ -95,4 +113,5 @@ func init() {
 	listCmd.Flags().StringVar(&titleFilter, "title", "", "Filter results by title.")
 	listCmd.Flags().StringVar(&tagFilter, "tag", "", "Filter results by tag.")
 	filterable(listCmd)
+	jsonable(listCmd)
 }

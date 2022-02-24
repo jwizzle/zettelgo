@@ -6,6 +6,7 @@ import (
   "os"
 	"strings"
   "path/filepath"
+	"encoding/json"
 
 	"github.com/jwizzle/zettelgo/util"
 )
@@ -16,6 +17,24 @@ type Box struct {
 	Notes []Note
 	Notepaths []string
 	Config Cfg
+}
+
+// Return json byte representation.
+func (self *Box) ToJson(filter NoteFilter) ([]byte, error) {
+	var notesOut []Note
+
+	for _, note := range self.Notes {
+		if filter.Match(note) {
+			notesOut = append(notesOut, note)
+		}
+	}
+
+	jsonbytes, err := json.Marshal(notesOut)
+	if err != nil{
+		return []byte{}, err
+	}
+
+	return jsonbytes, nil
 }
 
 // Return a list of all unique tags in the box.
