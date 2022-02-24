@@ -35,7 +35,10 @@ func buildDisplaystring(note zettels.Note) (string, error){
 
 func listNotes() (error) {
 	if jsonFilter == "" {
-		jsonFilter = fmt.Sprintf(`{"title": "%v", "tag": "%v"}`, titleFilter, tagFilter)
+		jsonFilter = fmt.Sprintf(
+			`{"title": "%v", "tag": "%v"}`,
+			titleFilter, tagFilter,
+		)
 	}
 	notes, err := zettelBox.GetNotesS(jsonFilter)
 	if err != nil {

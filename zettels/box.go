@@ -32,12 +32,14 @@ func (self *Box) GetTags() ([]string) {
 }
 
 // Retrieve a note from the box.
-func (self *Box) GetNote(arg string) (Note, error) {
+// Filtered by a json string.
+func (self *Box) GetNote(filter NoteFilter) (Note, error) {
 	for _, note := range self.Notes {
-		if strings.Contains(note.Title, arg) || strings.Contains(note.Path, arg) {
+		if filter.MatchAny(note) {
 			return note, nil
 		}
 	}
+
 	return Note{}, errors.New("Note not found.")
 }
 

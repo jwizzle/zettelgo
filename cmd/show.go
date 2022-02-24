@@ -8,6 +8,8 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/jwizzle/zettelgo/zettels"
+
 	"github.com/spf13/cobra"
 )
 
@@ -25,7 +27,12 @@ var showCmd = &cobra.Command{
 	RunE: func(cmd *cobra.Command, args []string) (error) {
 		splitarg := strings.Split(args[0], "/")
 		pathlessArg := splitarg[len(splitarg) - 1]
-		note, err := zettelBox.GetNote(pathlessArg)
+		filter := zettels.NoteFilter{
+			Title: pathlessArg,
+			Path: pathlessArg,
+			Filename: pathlessArg,
+		}
+		note, err := zettelBox.GetNote(filter)
 		if err != nil {
 			return err
 		}

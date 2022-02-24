@@ -5,6 +5,7 @@ import (
 	"os"
 	"regexp"
 	"bytes"
+	"strings"
 )
 
 // Represent a note/zettel.
@@ -13,6 +14,7 @@ type Note struct {
 	Path string
 	Link string
 	HeaderDelimiter string
+	Filename string
 	Header Header
 }
 
@@ -121,11 +123,14 @@ func NewNote(path string, config Cfg) (Note, error) {
 	headertext = wrapSpecialstrings(headertext)
 	newheader, err := NewHeader(headertext, path)
 	handleError(err)
+	splitpath := strings.Split(path, "/")
+	filename := splitpath[len(splitpath) - 1]
 
 	return Note{
 		Title: newheader.Title,
 		Header: *newheader,
 		Path: path,
+		Filename: filename,
 		HeaderDelimiter: config.Header_delimiter,
 	}, nil
 }
