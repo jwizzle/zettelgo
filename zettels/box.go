@@ -5,6 +5,8 @@ import (
   "os"
 	"strings"
   "path/filepath"
+
+	"github.com/jwizzle/zettelgo/util"
 )
 
 // Represent a collection of zettels, and provides an interface to them.
@@ -13,6 +15,19 @@ type Box struct {
 	Notes []Note
 	Notepaths []string
 	Config Cfg
+}
+
+// Return a list of all unique tags in the box.
+func (self *Box) GetTags() ([]string) {
+	var uniqtags []string
+	for _, note := range self.Notes {
+		for _, tag := range note.Header.Tags {
+			if ! util.StringInSlice(tag, uniqtags) {
+				uniqtags = append(uniqtags, tag)
+			}
+		}
+	}
+	return uniqtags
 }
 
 // Retrieve a note from the box.

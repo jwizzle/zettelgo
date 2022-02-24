@@ -60,18 +60,7 @@ var listCmd = &cobra.Command{
 	Long: `List all zettels in the directory found in the config file.`,
 	RunE: func(cmd *cobra.Command, args []string) (error) {
 		var err error
-		if len(args) == 1 {
-			// TODO Hier ook tags accepteren.
-			switch args[0] {
-				case "notes":
-					err = listNotes()
-				default:
-					err = listNotes()
-			}
-		} else {
-			err = listNotes()
-		}
-
+		err = listNotes()
 		return err
 	},
 }
