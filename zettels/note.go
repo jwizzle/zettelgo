@@ -6,6 +6,7 @@ import (
 	"regexp"
 	"bytes"
 	"strings"
+	"encoding/json"
 )
 
 // Represent a note/zettel.
@@ -16,6 +17,14 @@ type Note struct {
 	HeaderDelimiter string
 	Filename string
 	Header Header
+}
+
+func (self *Note) ToJson() ([]byte, error) {
+	jsonbytes, err := json.Marshal(self)
+	if err != nil{
+		return []byte{}, err
+	}
+	return jsonbytes, nil
 }
 
 // Return the full filecontent of the note.

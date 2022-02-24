@@ -12,3 +12,9 @@ func filterable(cmd *cobra.Command) {
 	`Filter by json (eg. {"title": "my little pony screenplay", "tag": "#bighitsforthefuture"}).
 If this is given, all other filterflags or arguments are ignored.`)
 }
+
+// Add to commands that allow json output.
+var jsonOut bool
+func jsonable(cmd *cobra.Command) {
+	cmd.Flags().BoolVar(&jsonOut, "json", false, "Return json output.")
+}

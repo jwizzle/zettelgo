@@ -58,15 +58,19 @@ title "her" but a note with the title "where I keep the bodies" is evaluated fir
 		}
 
 		var notecontent []byte
-		if headerOnly {
-			var headerstring string
-			headerstring, err = note.Header.Display()
-			notecontent = []byte(headerstring)
+		if jsonOut {
+			notecontent, err = note.ToJson()
 		} else {
-			if showHeader {
-				notecontent, err = note.GetFullContent()
+			if headerOnly {
+				var headerstring string
+				headerstring, err = note.Header.Display()
+				notecontent = []byte(headerstring)
 			} else {
-				notecontent, err = note.GetContent()
+				if showHeader {
+					notecontent, err = note.GetFullContent()
+				} else {
+					notecontent, err = note.GetContent()
+				}
 			}
 		}
 		if err != nil {
@@ -83,4 +87,5 @@ func init() {
 	showCmd.Flags().BoolVar(&showHeader, "header", false, "Display header in output.")
 	showCmd.Flags().BoolVar(&headerOnly, "header-only", false, "Display header only.")
 	filterable(showCmd)
+	jsonable(showCmd)
 }
