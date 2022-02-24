@@ -1,10 +1,12 @@
 // TODO 
 // Test
-// Fuzzymatching
+// Proper fuzzymatching
 package zettels
 
 import (
+	"strings"
 	"encoding/json"
+
 	"github.com/jwizzle/zettelgo/util"
 )
 
@@ -15,10 +17,12 @@ type NoteFilter struct {
 
 // Check if the given note matches the filter.
 func (self *NoteFilter) Match(note Note) (bool) {
-	if self.Title != "" && self.Title != note.Title {
+	if self.Title != "" && ! strings.Contains(note.Title, self.Title) {
 		return false
 	}
-	if self.Tag != "" && ! util.StringInSlice(self.Tag, note.Header.Tags) {
+	if self.Tag != "" && (
+		! util.StringInSlice(self.Tag, note.Header.Tags) && 
+		! util.StringInSlice("#" + self.Tag, note.Header.Tags)) {
 		return false
 	}
 	return true
