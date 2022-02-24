@@ -5,7 +5,6 @@ Copyright © 2022 jwizzle info@hossel.net
 package cmd
 
 import (
-	"errors"
 	"fmt"
 	"strings"
 
@@ -22,10 +21,8 @@ var showCmd = &cobra.Command{
 	Use:   "show",
 	Short: "Show the contents of a zettel.",
 	Long: `Show the contents of a zettel.`,
+  Args: cobra.ExactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) (error) {
-    if len(args) != 1 {
-      return errors.New("Show takes exactly 1 argument.")
-    }
 		splitarg := strings.Split(args[0], "/")
 		pathlessArg := splitarg[len(splitarg) - 1]
 		note, err := zettelBox.GetNote(pathlessArg)
