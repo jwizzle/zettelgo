@@ -45,13 +45,8 @@ func (self *Box) GetNote(filter NoteFilter) (Note, error) {
 
 // Retrieve notes from the box.
 // Possibly filtered by a json string.
-func (self *Box) GetNotesS(filterstring string) ([]Note, error) {
+func (self *Box) GetNotesS(filter NoteFilter) ([]Note, error) {
 	notes := []Note{}
-	filter, err := NewNoteFilter(filterstring)
-	if err != nil {
-		return []Note{}, err
-	}
-
 	for _, note := range self.Notes {
 		if filter.Match(note) {
 			notes = append(notes, note)

@@ -34,17 +34,25 @@ func buildDisplaystring(note zettels.Note) (string, error){
 }
 
 func listNotes() (error) {
+	var filter zettels.NoteFilter
+	var err error
+
 	if jsonFilter == "" {
-		jsonFilter = fmt.Sprintf(
-			`{"title": "%v", "tag": "%v"}`,
-			titleFilter, tagFilter,
-		)
+		filter = zettels.NoteFilter{
+			Title: titleFilter,
+			Tag: tagFilter,
+		}
+	} else {
+		filter, err = zettels.NewNoteFilter(jsonFilter)
+		if err != nil {
+			return err
+		}
 	}
-	notes, err := zettelBox.GetNotesS(jsonFilter)
+
+	notes, err := zettelBox.GetNotesS(filter)
 	if err != nil {
 		return err
 	}
-
 	for _, note := range notes {
 		output, err := buildDisplaystring(note)
 		if err != nil {
