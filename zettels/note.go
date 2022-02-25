@@ -13,7 +13,6 @@ import (
 type Note struct {
 	Title string
 	Path string
-	Link string
 	HeaderDelimiter string
 	Filename string
 	Header Header

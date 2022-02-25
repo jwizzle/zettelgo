@@ -15,6 +15,7 @@ type NoteFilter struct {
 	Tag string
 	Path string
 	Filename string
+	Link string
 }
 
 // Check if any of the filter fields match the given note.
@@ -27,6 +28,18 @@ func (self *NoteFilter) MatchAny(note Note) (bool) {
 	}
 	if self.Title != "" && strings.Contains(note.Title, self.Title) {
 		return true
+	}
+	if self.Link != "" {
+		strippedlink := strings.ReplaceAll(self.Link, "[", "")
+		strippedlink = strings.ReplaceAll(strippedlink, "]", "")
+		subfilter := NoteFilter{
+			Title: strippedlink,
+			Path: strippedlink,
+			Filename: strippedlink,
+		}
+		if subfilter.MatchAny(note) {
+			return true
+		}
 	}
 	if self.Tag != "" && (
 		util.StringInSlice(self.Tag, note.Header.Tags) && 
@@ -51,6 +64,18 @@ func (self *NoteFilter) Match(note Note) (bool) {
 	}
 	if self.Filename != "" && self.Filename != note.Filename {
 		return false
+	}
+	if self.Link != "" {
+		strippedlink := strings.ReplaceAll(self.Link, "[", "")
+		strippedlink = strings.ReplaceAll(strippedlink, "]", "")
+		subfilter := NoteFilter{
+			Title: strippedlink,
+			Path: strippedlink,
+			Filename: strippedlink,
+		}
+		if ! subfilter.MatchAny(note) {
+			return false
+		}
 	}
 	return true
 }
