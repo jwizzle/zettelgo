@@ -11,11 +11,11 @@ import (
 
 // Represent a note/zettel.
 type Note struct {
-	Title string
-	Path string
-	HeaderDelimiter string
-	Filename string
-	Header Header
+	Title string `json:"title"`
+	Path string `json:"path"`
+	HeaderDelimiter string `json:"headerdelimiter"`
+	Filename string `json:"filename"`
+	Header Header `json:"header"`
 }
 
 // Return json byte representation.
