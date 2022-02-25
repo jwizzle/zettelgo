@@ -17,15 +17,19 @@ var tagsCmd = &cobra.Command{
 	Short: "List all tags.",
 	Long: `List all tags.`,
 	RunE: func(cmd *cobra.Command, args []string) (error) {
+		filter, err := makeListFilter()
+		if err != nil {
+			return err
+		}
 		out := ""
 		if jsonOut {
-			jsonout, err := json.Marshal(zettelBox.GetTags())
+			jsonout, err := json.Marshal(zettelBox.GetTags(filter))
 			if err != nil {
 				return err
 			}
 			out = string(jsonout)
 		} else {
-			for _, tag := range zettelBox.GetTags() {
+			for _, tag := range zettelBox.GetTags(filter) {
 				out = out + tag + "\n"		
 			}
 		}
@@ -38,4 +42,5 @@ var tagsCmd = &cobra.Command{
 func init() {
 	listCmd.AddCommand(tagsCmd)
 	jsonable(tagsCmd)
+	filterable(tagsCmd)
 }

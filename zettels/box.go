@@ -38,11 +38,12 @@ func (self *Box) ToJson(filter NoteFilter) ([]byte, error) {
 }
 
 // Return a list of all unique tags in the box.
-func (self *Box) GetTags() ([]string) {
+func (self *Box) GetTags(filter NoteFilter) ([]string) {
 	var uniqtags []string
 	for _, note := range self.Notes {
 		for _, tag := range note.Header.Tags {
-			if ! util.StringInSlice(tag, uniqtags) {
+			if ! util.StringInSlice(tag, uniqtags) &&
+			filter.Match(note){
 				uniqtags = append(uniqtags, tag)
 			}
 		}
