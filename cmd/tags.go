@@ -6,6 +6,7 @@ package cmd
 
 import (
 	"fmt"
+	"encoding/json"
 
 	"github.com/spf13/cobra"
 )
@@ -15,13 +16,26 @@ var tagsCmd = &cobra.Command{
 	Use:   "tags",
 	Short: "List all tags.",
 	Long: `List all tags.`,
-	Run: func(cmd *cobra.Command, args []string) {
-		for _, tag := range zettelBox.GetTags() {
-			fmt.Println(tag)
+	RunE: func(cmd *cobra.Command, args []string) (error) {
+		out := ""
+		if jsonOut {
+			jsonout, err := json.Marshal(zettelBox.GetTags())
+			if err != nil {
+				return err
+			}
+			out = string(jsonout)
+		} else {
+			for _, tag := range zettelBox.GetTags() {
+				out = out + tag + "\n"		
+			}
 		}
+
+		fmt.Println(out)
+		return nil
 	},
 }
 
 func init() {
 	listCmd.AddCommand(tagsCmd)
+	jsonable(tagsCmd)
 }
