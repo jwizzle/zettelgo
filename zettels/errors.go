@@ -1,7 +1,8 @@
 package zettels
 
 import (
-	"fmt"
+	"os"
+	"log"
 )
 
 type HeaderMalformedError struct{path string}
@@ -10,9 +11,11 @@ func (m *HeaderMalformedError) Error() string {
 }
 
 func handleError(e error) {
+		l := log.New(os.Stderr, "", 0)
+
     switch e.(type) {
 			case *HeaderMalformedError :
-				fmt.Println(e)
+				l.Println(e)
 			default:
 				if e != nil {
 						panic(e)
