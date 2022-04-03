@@ -131,7 +131,9 @@ func NewNote(path string, config Cfg) (Note, error) {
 	handleError(err)
 	headertext = wrapSpecialstrings(headertext)
 	newheader, err := NewHeader(headertext, path)
-	handleError(err)
+	if err != nil {
+		return Note{}, err
+	}
 	splitpath := strings.Split(path, "/")
 	filename := splitpath[len(splitpath) - 1]
 

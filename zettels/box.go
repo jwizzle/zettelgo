@@ -84,8 +84,11 @@ func (self *Box) Fill() (*Box, error) {
 
 	for _, path := range paths {
 		newnote, err := NewNote(path, self.Config)
-		handleError(err)
-		self.Notes = append(self.Notes, newnote)
+		if err != nil {
+			handleError(err)
+		} else {
+			self.Notes = append(self.Notes, newnote)
+		}
 	}
 
 	return self, nil
