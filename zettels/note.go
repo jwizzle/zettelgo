@@ -18,6 +18,20 @@ type Note struct {
 	Header Header `json:"header"`
 }
 
+// Check if the note has a link to another note, by path
+func (self *Note) HasLink(input string, zettelbox Box) (bool) {
+	for _, link := range self.Header.Links {
+		// TODO error handling
+		targetNote, _ := zettelbox.GetNote(NoteFilter{Path: input})
+		linkfilter := NoteFilter{Link: link}
+		if linkfilter.Match(targetNote, zettelbox) {
+			return true
+		}
+	}
+
+	return false
+}
+
 // Return json byte representation.
 func (self *Note) ToJson() ([]byte, error) {
 	jsonbytes, err := json.Marshal(self)

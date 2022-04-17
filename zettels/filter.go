@@ -1,11 +1,11 @@
-// TODO 
+// TODO
 // Proper fuzzymatching
 // Test
 package zettels
 
 import (
-	"strings"
 	"encoding/json"
+	"strings"
 
 	"github.com/jwizzle/zettelgo/util"
 )
@@ -16,10 +16,11 @@ type NoteFilter struct {
 	Path string
 	Filename string
 	Link string
+	LinkedFrom string `json:"linked_from"` // Matches if the given link is present in filepath.
 }
 
 // Check if any of the filter fields match the given note.
-func (self *NoteFilter) MatchAny(note Note) (bool) {
+func (self *NoteFilter) MatchAny(note Note, zettelbox Box) (bool) {
 	if self.Path != "" && self.Path == note.Path {
 		return true
 	}
@@ -37,8 +38,17 @@ func (self *NoteFilter) MatchAny(note Note) (bool) {
 			Path: strippedlink,
 			Filename: strippedlink,
 		}
-		if subfilter.MatchAny(note) {
+		if subfilter.MatchAny(note, zettelbox) {
 			return true
+		}
+	}
+	if self.LinkedFrom != "" {
+		linkedfromNote, err := zettelbox.GetNote(NoteFilter{Path: self.LinkedFrom})
+		// TODO Handle error
+		if err == nil {
+			if linkedfromNote.HasLink(note.Path, zettelbox) {
+				return true
+			}
 		}
 	}
 	if self.Tag != "" && (
@@ -50,7 +60,7 @@ func (self *NoteFilter) MatchAny(note Note) (bool) {
 }
 
 // Check if the given note matches the filter.
-func (self *NoteFilter) Match(note Note) (bool) {
+func (self *NoteFilter) Match(note Note, zettelbox Box) (bool) {
 	if self.Title != "" && ! strings.Contains(note.Title, self.Title) {
 		return false
 	}
@@ -73,8 +83,17 @@ func (self *NoteFilter) Match(note Note) (bool) {
 			Path: strippedlink,
 			Filename: strippedlink,
 		}
-		if ! subfilter.MatchAny(note) {
+		if ! subfilter.MatchAny(note, zettelbox) {
 			return false
+		}
+	}
+	if self.LinkedFrom != "" {
+		linkedfromNote, err := zettelbox.GetNote(NoteFilter{Path: self.LinkedFrom})
+		// TODO Handle error
+		if err == nil {
+			if ! linkedfromNote.HasLink(note.Path, zettelbox) {
+				return false
+			}
 		}
 	}
 	return true

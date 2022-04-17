@@ -24,7 +24,7 @@ func (self *Box) ToJson(filter NoteFilter) ([]byte, error) {
 	var notesOut []Note
 
 	for _, note := range self.Notes {
-		if filter.Match(note) {
+		if filter.Match(note, *self) {
 			notesOut = append(notesOut, note)
 		}
 	}
@@ -43,7 +43,7 @@ func (self *Box) GetTags(filter NoteFilter) ([]string) {
 	for _, note := range self.Notes {
 		for _, tag := range note.Header.Tags {
 			if ! util.StringInSlice(tag, uniqtags) &&
-			filter.Match(note){
+			filter.Match(note, *self){
 				uniqtags = append(uniqtags, tag)
 			}
 		}
@@ -55,7 +55,7 @@ func (self *Box) GetTags(filter NoteFilter) ([]string) {
 // Filtered by a json string.
 func (self *Box) GetNote(filter NoteFilter) (Note, error) {
 	for _, note := range self.Notes {
-		if filter.MatchAny(note) {
+		if filter.MatchAny(note, *self) {
 			return note, nil
 		}
 	}
@@ -68,7 +68,7 @@ func (self *Box) GetNote(filter NoteFilter) (Note, error) {
 func (self *Box) GetNotesS(filter NoteFilter) ([]Note, error) {
 	notes := []Note{}
 	for _, note := range self.Notes {
-		if filter.Match(note) {
+		if filter.Match(note, *self) {
 			notes = append(notes, note)
 		}
 	}
