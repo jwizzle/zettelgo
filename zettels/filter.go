@@ -17,6 +17,7 @@ type NoteFilter struct {
 	Filename string
 	Link string
 	LinkedFrom string `json:"linked_from"` // Matches if a link to the matching note is present in note under filename.
+	LinkingTo string `json:"linking_to"` // Matches if a link to the matching note is present in note under filename.
 }
 
 // Check if any of the filter fields match the given note.
@@ -47,6 +48,15 @@ func (self *NoteFilter) MatchAny(note Note, zettelbox Box) (bool) {
 		// TODO Handle error
 		if err == nil {
 			if linkedfromNote.HasLink(note.Path, zettelbox) {
+				return true
+			}
+		}
+	}
+	if self.LinkingTo != "" {
+		linkingtoNote, err := zettelbox.GetNote(NoteFilter{Filename: self.LinkingTo})
+		// TODO Handle error
+		if err == nil {
+			if note.HasLink(linkingtoNote.Path, zettelbox) {
 				return true
 			}
 		}
@@ -92,6 +102,15 @@ func (self *NoteFilter) Match(note Note, zettelbox Box) (bool) {
 		// TODO Handle error
 		if err == nil {
 			if ! linkedfromNote.HasLink(note.Path, zettelbox) {
+				return false
+			}
+		}
+	}
+	if self.LinkingTo != "" {
+		linkingtoNote, err := zettelbox.GetNote(NoteFilter{Filename: self.LinkingTo})
+		// TODO Handle error
+		if err == nil {
+			if ! note.HasLink(linkingtoNote.Path, zettelbox) {
 				return false
 			}
 		}
