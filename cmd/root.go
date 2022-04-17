@@ -88,6 +88,7 @@ func postinit() {
 			".git",
 		},
 		Header_delimiter: "---",
+		Note_suffix: ".md",
 	})
 	zettelBox = zettels.Box{Config: zettelCfg}
 	_, err := zettelBox.Fill()

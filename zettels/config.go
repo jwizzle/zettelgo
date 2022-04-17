@@ -1,11 +1,12 @@
 package zettels
 
 import (
-  "fmt"
-  "os"
-  "gopkg.in/yaml.v3"
+	"fmt"
 	"io/ioutil"
+	"os"
+
 	"github.com/jwizzle/zettelgo/util"
+	"gopkg.in/yaml.v3"
 )
 
 // Represent configuration needed to find zettels on system, and parse them correctly.
@@ -13,6 +14,7 @@ type Cfg struct {
 	Directory string `yaml:"directory"`
 	Ignore_list []string `yaml:"ignore_list"`
 	Header_delimiter string `yaml:"header_delimiter"`
+	Note_suffix string `yaml:"note_suffix"`
 }
 
 // Merge one config with the given other.
@@ -20,6 +22,9 @@ type Cfg struct {
 func (self *Cfg) Merge(other Cfg) {
 	if other.Directory != "" {
 		self.Directory = other.Directory
+	}
+	if other.Note_suffix != "" {
+		self.Note_suffix = other.Note_suffix
 	}
 	if other.Header_delimiter != "" {
 		self.Header_delimiter = other.Header_delimiter
