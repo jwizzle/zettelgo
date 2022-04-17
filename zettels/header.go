@@ -2,6 +2,7 @@ package zettels
 
 import (
 	"fmt"
+	"strings"
 
   "gopkg.in/yaml.v3"
 )
@@ -20,6 +21,8 @@ func (self *Header) Display() (string, error) {
 		return "", err
 	}
 	out := fmt.Sprintf("%s", string(ymlcont))
+	out = strings.ReplaceAll(out, "'", "")
+	out = strings.ReplaceAll(out, "\"", "")
 	return out, nil
 }
 

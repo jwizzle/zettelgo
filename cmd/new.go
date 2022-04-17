@@ -33,9 +33,9 @@ It's initially filled with a header template.`,
 
 		newheader := zettels.Header{
 			Title: title,
-			Date: formattedDate,
-			Tags: []string{""},
-			Links: map[string]string{"": ""},
+			Date: currentTime.Format("2006-01-02T15:04"),
+			Tags: []string{"#tag"},
+			Links: map[string]string{"description": "[[link]]"},
 		}
 		headerstring, _ := newheader.Display()
 
