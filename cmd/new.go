@@ -46,6 +46,7 @@ It's initially filled with a header template.`,
 		defer newfile.Close()
 		newfile.WriteString(fmt.Sprintf("---\n%s---", headerstring))
 
+		fmt.Println(filepath)
 		return nil
 	},
 }
