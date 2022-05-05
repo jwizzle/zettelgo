@@ -1,5 +1,3 @@
-// TODO
-// beter templaten
 /*
 Copyright © 2022 jwizzle info@hossel.net
 

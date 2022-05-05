@@ -17,6 +17,15 @@ type Cfg struct {
 	Note_suffix string `yaml:"note_suffix"`
 }
 
+func (self *Cfg) ToString() (string, error) {
+	ymlcont, err := yaml.Marshal(self)
+	if err != nil {
+		return "", err
+	}
+
+	return string(ymlcont), nil
+}
+
 // Merge one config with the given other.
 // Overriding self with existing keys in the other config.
 func (self *Cfg) Merge(other Cfg) {
