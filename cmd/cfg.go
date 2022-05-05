@@ -7,6 +7,7 @@ package cmd
 import (
 	"fmt"
 	"reflect"
+	"encoding/json"
 
 	"github.com/spf13/cobra"
 )
@@ -36,11 +37,20 @@ var cfgCmd = &cobra.Command{
 				return &DisplayParamMalformedError{}
 		}
 
-		fmt.Println(out)
+		if jsonOut {
+			jsonbytes, err := json.Marshal(out)
+			if err != nil{
+				return err
+			}
+			fmt.Println(string(jsonbytes))
+		} else {
+			fmt.Println(out)
+		}
 		return nil
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(cfgCmd)
+	jsonable(cfgCmd)
 }
