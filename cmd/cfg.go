@@ -5,12 +5,18 @@ TODO More than show
 package cmd
 
 import (
+	"encoding/json"
 	"fmt"
 	"reflect"
-	"encoding/json"
+	"strings"
 
 	"github.com/spf13/cobra"
 )
+
+func caseInsenstiveFieldByName(v reflect.Value, name string) reflect.Value {
+    name = strings.ToLower(name)
+    return v.FieldByNameFunc(func(n string) bool { return strings.ToLower(n) == name })
+}
 
 // showcfgCmd represents the showcfg command
 var cfgCmd = &cobra.Command{
@@ -21,6 +27,10 @@ var cfgCmd = &cobra.Command{
 		var out string
 		var err error
 
+		if len(args) < 1 {
+			return &ArgumentError{}
+		}
+
 		switch args[0] {
 			case "show" :
 				if len(args) < 2 {
@@ -30,11 +40,15 @@ var cfgCmd = &cobra.Command{
 					}
 				} else {
 					cfgreflection := reflect.ValueOf(zettelCfg)
-					// TODO Ugly errors
-					out = cfgreflection.FieldByName(args[1]).Interface().(string)
+					cfgfield := caseInsenstiveFieldByName(cfgreflection, args[1])
+					if cfgfield == (reflect.Value{}) {
+						out = "Unknown config field."
+					} else {
+						out = cfgfield.Interface().(string)
+					}
 				}
 			default:
-				return &DisplayParamMalformedError{}
+				return &ArgumentError{}
 		}
 
 		if jsonOut {

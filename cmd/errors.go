@@ -9,6 +9,11 @@ func (m *DisplayParamMalformedError) Error() string {
 	return "Display param malformed."
 }
 
+type ArgumentError struct{}
+func (m *ArgumentError) Error() string {
+	return "Argument error."
+}
+
 func handleError(e error) {
     switch e.(type) {
 			case *DisplayParamMalformedError :
