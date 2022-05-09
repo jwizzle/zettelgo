@@ -65,6 +65,8 @@ func init() {
 // Instantiate a new config, by combining the defaults that are hardcoded
 // and those read from '~/.zettelgo_conf.yaml' and CLI opts.
 func configInit(defaults *zettels.Cfg) (*zettels.Cfg) {
+	// TODO Should check for error here and possibly use writefile for new config.
+	// Using the defaults.
 	userCfg, err := zettels.CfgFromFile(cfgPath)
 	if err != nil {
 		fmt.Println(err)

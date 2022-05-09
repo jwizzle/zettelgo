@@ -5,8 +5,8 @@ Copyright © 2022 jwizzle info@hossel.net
 package cmd
 
 import (
-	"fmt"
 	"encoding/json"
+	"fmt"
 	"reflect"
 
 	"github.com/spf13/cobra"

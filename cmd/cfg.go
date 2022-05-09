@@ -27,5 +27,4 @@ var cfgCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(cfgCmd)
-	jsonable(cfgCmd)
 }

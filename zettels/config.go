@@ -1,6 +1,7 @@
 package zettels
 
 import (
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -11,10 +12,10 @@ import (
 
 // Represent configuration needed to find zettels on system, and parse them correctly.
 type Cfg struct {
-	Directory string `yaml:"directory"`
-	Ignore_list []string `yaml:"ignore_list"`
-	Header_delimiter string `yaml:"header_delimiter"`
-	Note_suffix string `yaml:"note_suffix"`
+	Directory string `yaml:"directory" json:"directory"`
+	Ignore_list []string `yaml:"ignore_list" json:"ignore_list"`
+	Header_delimiter string `yaml:"header_delimiter" json:"header_delimiter"`
+	Note_suffix string `yaml:"note_suffix" json:"note_suffix"`
 }
 
 func (self *Cfg) ToString() (string, error) {
@@ -24,6 +25,20 @@ func (self *Cfg) ToString() (string, error) {
 	}
 
 	return string(ymlcont), nil
+}
+
+// Write the config to file.
+// Overwriting the complete config file with the in-memory version including defaults.
+// TODO
+func (self *Cfg) WriteFile() (error) {
+	userHome := os.Getenv("HOME")
+	f, err := os.Open(userHome + "/.zettelgo_conf.yaml")
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+
+	return nil
 }
 
 // Merge one config with the given other.
@@ -55,9 +70,9 @@ func CfgFromFile(path string) (*Cfg, error) {
 	if yml_err != nil {
     switch yml_err.(type) {
 			case *os.PathError :
-				text := fmt.Sprintf("No config file at: %v. Continuing with default dir.",
+				text := fmt.Sprintf("ERROR: No config file at: %v.",
 														path)
-				fmt.Println(text)
+				return &Cfg{}, errors.New(text)
 			default:
 				return nil, yml_err
     }

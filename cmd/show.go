@@ -6,7 +6,6 @@ package cmd
 
 import (
 	"fmt"
-	"errors"
 
 	"github.com/jwizzle/zettelgo/zettels"
 
@@ -74,7 +73,7 @@ This might yield unexpected results. For example if you search for a note with t
 title "her" but a note with the title "where I keep the bodies" is evaluated first.`,
   Args: func(cmd *cobra.Command, args []string) error {
     if len(args) != 1 && jsonFilter == "" {
-      return errors.New("Requires either an argument or a json filter.")
+			return &ArgumentError{Msg: "Requires either a json filter or argument."}
     }
     return nil
   },
