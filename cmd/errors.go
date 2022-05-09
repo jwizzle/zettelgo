@@ -9,9 +9,9 @@ func (m *DisplayParamMalformedError) Error() string {
 	return "Display param malformed."
 }
 
-type ArgumentError struct{}
+type ArgumentError struct{Msg string}
 func (m *ArgumentError) Error() string {
-	return "Argument error."
+	return fmt.Sprintf("Argument error: %s", m.Msg)
 }
 
 func handleError(e error) {

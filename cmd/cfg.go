@@ -21,7 +21,7 @@ var cfgCmd = &cobra.Command{
 	Short: "Show and set config.",
 	Long: `Show and set config values for zettelgo.`,
 	RunE: func(cmd *cobra.Command, args []string) (error) {
-		return &ArgumentError{}
+		return &ArgumentError{Msg: "Argument expected"}
 	},
 }
 
