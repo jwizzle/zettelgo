@@ -19,4 +19,7 @@ The main goal writing this, was to call the commands from lua and capture json o
 ## TODO
 
 * Remove note parsing from commands where it's not necessary
+* Do we really need functions like `makeListFilter()`? When is anyone using this without front-end?
+    * Maybe not remove it for now, but see what happens if we switch to a daemonized version
+    * The cobra commands will in the end be the front end for CLI interaction and might not need the json parsing at all
 * Daemonize, switch to something better than capturing shell output for interfacing between other applications
